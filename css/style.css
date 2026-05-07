@@ -1,0 +1,39 @@
+/* Variables */
+:root {
+    --color-primary: #1a3a6c;
+    --color-accent: #c9a961;
+    --color-bg: #faf7f2;
+    --color-text: #2c2c2c;
+    --spacing: 1.5rem;
+}
+
+body {
+    background: var(--color-bg);
+    color: var(--color-text);
+}
+
+.section {
+    padding: 3rem var(--spacing);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Faire-part */
+#faire-part {
+}
+
+/* Countdown */
+#countdown-timer {
+}
+
+/* Dates */
+#dates {
+}
+
+/* Lieux */
+#lieux {
+}
+
+/* RSVP */
+#rsvp-form {
+}

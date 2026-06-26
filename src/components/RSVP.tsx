@@ -88,7 +88,7 @@ export function RSVP({ includeChabbat }: { includeChabbat: boolean }) {
 
   if (formState === 'success') {
     return (
-      <section id="rsvp" className="py-24 md:py-32 px-6">
+      <section id="rsvp" className="font-display py-24 md:py-32 px-6">
         <motion.div
           className="max-w-lg mx-auto text-center bg-cream/85 rounded-3xl shadow-lg shadow-ink/5 p-12"
           initial={{ opacity: 0, scale: 0.96 }}
@@ -107,7 +107,7 @@ export function RSVP({ includeChabbat }: { includeChabbat: boolean }) {
   }
 
   return (
-    <section id="rsvp" className="py-24 md:py-32 px-6">
+    <section id="rsvp" className="font-display py-24 md:py-32 px-6">
       <div className="max-w-lg mx-auto">
         <motion.div
           className="mb-10 flex justify-center"

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { submitRSVP } from '@/lib/google-sheets';
 import { content } from '@/lib/content';
+import { CrownOrnament } from '@/components/Ornaments';
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -94,7 +95,7 @@ export function RSVP({ includeChabbat }: { includeChabbat: boolean }) {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="text-5xl mb-6">☀︎</div>
+          <CrownOrnament className="text-sun mx-auto mb-6" size={64} />
           <h3 className="font-display text-4xl text-sky-deep mb-4">Merci !</h3>
           <p className="text-ink-soft">
             Votre réponse a bien été enregistrée. Nous avons hâte de partager ce moment

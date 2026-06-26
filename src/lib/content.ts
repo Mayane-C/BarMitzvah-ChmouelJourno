@@ -6,6 +6,7 @@
 export const content = {
   enfant: {
     prenom: 'Chmouel',
+    prenomHe: 'שמואל',
     nom: 'Journo',
     surnom: 'Chmoulik',
   },
@@ -51,8 +52,8 @@ export const content = {
       },
       {
         id: 'maamar-ohel',
-        titre: 'Maamar au Ohel + Repas de Bar Mitsva',
-        icon: 'tefilin',
+        titre: 'Maamar au Ohel\n+ Repas de Bar Mitsva',
+        icon: 'sefer',
         date: 'Samedi 22 août 2026',
         heure: 'Motsaé Chabbat',
         lieu: 'Ohel — Tombe du Rabbi',
@@ -62,7 +63,7 @@ export const content = {
       {
         id: 'priere-770',
         titre: 'Prière du matin au 770',
-        icon: 'tefilin',
+        icon: 'star',
         date: 'Dimanche 23 août 2026',
         heure: 'Matin',
         lieu: '770 — Synagogue du Rabbi',
@@ -72,7 +73,7 @@ export const content = {
       {
         id: 'montee-torah',
         titre: 'Montée à la Torah',
-        icon: 'tefilin',
+        icon: 'torah',
         date: 'Lundi 24 août 2026',
         heure: 'Matin',
         lieu: 'Bureau du Rabbi',
@@ -83,7 +84,7 @@ export const content = {
     paris: [
       {
         id: 'chabbat-ki-tavo',
-        titre: 'Chabbat Bar Mitsva — Parachat Ki Tavo',
+        titre: 'Chabbat Bar Mitsva\nParachat Ki Tavo',
         icon: 'candles',
         date: 'Du vendredi 28 au samedi 29 août 2026',
         heure: '',
@@ -109,6 +110,7 @@ export const content = {
   visuels: {
     logo: '/images/logo-chmouel.png',             // logo complet (CHMOUEL + couronne)
     logoCrown: '/images/logo-chmouel-crown.png',  // couronne seule (hero)
+    wordmark: '/images/wordmark-chmouel.png',     // typo CHMOUEL seule (hero)
     logoLTD: '/images/ltd-logo.png',              // signature footer
   },
 

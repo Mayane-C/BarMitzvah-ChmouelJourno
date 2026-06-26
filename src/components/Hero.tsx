@@ -6,6 +6,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { content } from '@/lib/content';
 import { Countdown } from '@/components/Countdown';
+import { CrownOrnament } from '@/components/Ornaments';
 
 export function Hero({ onDiscover }: { onDiscover?: () => void }) {
   const [logoOk, setLogoOk] = useState(true);
@@ -55,14 +56,18 @@ export function Hero({ onDiscover }: { onDiscover?: () => void }) {
       id="invitation"
       className="relative min-h-screen min-h-dvh flex flex-col items-center justify-center text-center px-6 py-24 overflow-hidden"
     >
-      {/* Overlay sombre local au hero → fort contraste */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            'linear-gradient(to bottom, rgba(16,42,50,0.62) 0%, rgba(16,42,50,0.54) 60%, rgba(16,42,50,0.32) 100%)',
-        }}
-      />
+      {/* Voile local au hero : sombre quand des frames vidéo sont actives,
+         transparent sinon → laisse remonter le fond crème pour faire ressortir
+         le vert royal du nom. */}
+      {content.video.frames.count > 0 && (
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(to bottom, rgba(16,42,50,0.62) 0%, rgba(16,42,50,0.54) 60%, rgba(16,42,50,0.32) 100%)',
+          }}
+        />
+      )}
 
       <div ref={contentRef} className="relative z-10 w-full max-w-2xl">
       <motion.div
@@ -78,26 +83,34 @@ export function Hero({ onDiscover }: { onDiscover?: () => void }) {
             src={content.visuels.logoCrown}
             alt=""
             onError={() => setLogoOk(false)}
-            className="w-32 md:w-40 drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+            className="w-32 md:w-40 drop-shadow-[0_0_28px_rgba(255,255,255,0.85)]"
           />
         ) : (
           <div className="font-luxe text-6xl text-sun">CJ</div>
         )}
 
-        {/* Nom du Bar Mitsva */}
-        <p className="text-sand/90 text-xs md:text-sm tracking-[0.45em] uppercase mt-6">
+        {/* Nom du Bar Mitsva — wordmark image officiel + hébreu + nom */}
+        <p className="text-sky-deep/80 text-xs md:text-sm tracking-[0.55em] uppercase mt-6">
           Bar Mitsva
         </p>
-        <h1 className="font-luxe text-5xl md:text-7xl text-sand leading-tight mt-3 tracking-[0.05em]">
-          {content.enfant.prenom}
-        </h1>
-        <p className="font-luxe text-sand/90 text-xl md:text-2xl tracking-[0.32em] uppercase mt-1">
+        <img
+          src={content.visuels.wordmark}
+          alt={content.enfant.prenom}
+          className="w-72 md:w-[28rem] mt-4 select-none"
+          draggable={false}
+        />
+        {content.enfant.prenomHe && (
+          <p className="font-hebrew text-sun text-3xl md:text-4xl mt-3" dir="rtl">
+            {content.enfant.prenomHe}
+          </p>
+        )}
+        <p className="font-luxe font-normal text-sky-deep/85 text-lg md:text-xl tracking-[0.42em] uppercase mt-3">
           {content.enfant.nom}
         </p>
 
-        <div className="flex items-center justify-center gap-4 mt-5 mb-8">
+        <div className="flex items-center justify-center gap-4 mt-6 mb-8">
           <div className="w-16 h-px bg-gradient-to-r from-transparent to-sun" />
-          <span className="text-sun text-xs">✦</span>
+          <CrownOrnament className="text-sun" size={18} />
           <div className="w-16 h-px bg-gradient-to-l from-transparent to-sun" />
         </div>
 

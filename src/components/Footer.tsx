@@ -1,4 +1,5 @@
 import { content } from '@/lib/content';
+import { CrownOrnament } from '@/components/Ornaments';
 
 export function Footer() {
   return (
@@ -8,7 +9,7 @@ export function Footer() {
       </p>
       <div className="flex items-center justify-center gap-3 my-4">
         <div className="w-10 h-px bg-sky/60" />
-        <span className="text-sun text-xs">☀︎</span>
+        <CrownOrnament className="text-sun" size={16} />
         <div className="w-10 h-px bg-sky/60" />
       </div>
 

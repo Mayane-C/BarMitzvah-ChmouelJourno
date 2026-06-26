@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { content } from '@/lib/content';
+import { CrownOrnament } from '@/components/Ornaments';
 
 const TARGET_DATE = new Date(content.countdownTarget);
 
@@ -106,7 +107,7 @@ export function Countdown({ embedded = false }: { embedded?: boolean }) {
       {!embedded && (
         <div className="flex items-center justify-center gap-4 mt-10">
           <div className="w-16 h-px bg-gradient-to-r from-transparent to-sky" />
-          <span className="text-sun text-xs">☀︎</span>
+          <CrownOrnament className="text-sun" size={18} />
           <div className="w-16 h-px bg-gradient-to-l from-transparent to-sky" />
         </div>
       )}

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { motion, type Variants } from 'framer-motion';
 import { content } from '@/lib/content';
+import { CrownOrnament } from '@/components/Ornaments';
 
 const a = content.annonce;
 
@@ -177,21 +178,21 @@ export function Announcement() {
           <CurvedHebrew text={a.verset} className="w-full max-w-2xl mx-auto" />
         </motion.div>
 
-        {/* Couronne sous le verset */}
+        {/* Couronne sous le verset (remontée pour resserrer l'arche) */}
         {crownOk && (
           <motion.img
             variants={item}
             src={content.visuels.logoCrown}
             alt=""
             onError={() => setCrownOk(false)}
-            className="w-32 md:w-44 mx-auto -mt-2 mb-10"
+            className="w-24 md:w-32 mx-auto -mt-10 md:-mt-14 mb-6"
           />
         )}
 
         {/* Grands-parents — deux colonnes */}
         <motion.div
           variants={item}
-          className="grid grid-cols-2 items-center gap-x-10 max-w-xl mx-auto text-ink font-display text-base md:text-lg"
+          className="grid grid-cols-2 items-center gap-x-10 max-w-xl mx-auto text-ink font-display text-base md:text-lg leading-snug"
         >
           <div className="space-y-2">
             {a.grandsParents.gauche.map((n, i) => (
@@ -207,38 +208,54 @@ export function Announcement() {
 
         <motion.div variants={item} className="flex items-center justify-center gap-4 my-8">
           <div className="w-14 h-px bg-gradient-to-r from-transparent to-sky/70" />
-          <span className="text-sun text-xs">☀︎</span>
+          <CrownOrnament className="text-sun" size={18} />
           <div className="w-14 h-px bg-gradient-to-l from-transparent to-sky/70" />
         </motion.div>
 
         {/* Parents & fratrie */}
-        <motion.p variants={item} className="text-ink font-display text-2xl md:text-3xl">
+        <motion.p variants={item} className="text-ink font-display text-xl md:text-2xl">
           {a.famille}
         </motion.p>
 
-        <motion.p variants={item} className="mt-4 text-ink-soft text-base md:text-lg">
+        <motion.p
+          variants={item}
+          className="font-display italic mt-3 text-ink-soft text-base md:text-lg"
+        >
           {a.intro}
         </motion.p>
 
-        {/* Bar Mitsva — reflet doré discret */}
+        {/* Bar Mitsva — Cinzel, mêmes caps que le hero */}
         <motion.h2
           variants={item}
-          className="shine-gold mt-5 font-display font-semibold uppercase tracking-[0.06em] text-4xl md:text-6xl"
+          className="shine-gold mt-5 font-luxe font-normal uppercase tracking-[0.18em] text-3xl md:text-5xl"
         >
           {a.evenement}
         </motion.h2>
 
-        <motion.p variants={item} className="mt-4 text-ink-soft text-base md:text-lg">
+        <motion.p
+          variants={item}
+          className="font-display italic mt-4 text-ink-soft text-base md:text-lg"
+        >
           {a.lien}
         </motion.p>
 
-        {/* Prénom du Bar Mitsva — reflet doré + trait qui se dessine */}
-        <motion.p
+        {/* Prénom du Bar Mitsva — wordmark officiel + hébreu en dessous */}
+        <motion.img
           variants={itemName}
-          className="shine-gold mt-3 font-display text-6xl md:text-7xl leading-tight"
-        >
-          {a.prenom}
-        </motion.p>
+          src={content.visuels.wordmark}
+          alt={a.prenom}
+          className="w-56 md:w-72 mx-auto mt-4 select-none"
+          draggable={false}
+        />
+        {content.enfant.prenomHe && (
+          <motion.p
+            variants={item}
+            className="font-hebrew text-sun text-3xl md:text-4xl mt-3"
+            dir="rtl"
+          >
+            {content.enfant.prenomHe}
+          </motion.p>
+        )}
         {a.prenomSecond && (
           <motion.p
             variants={item}

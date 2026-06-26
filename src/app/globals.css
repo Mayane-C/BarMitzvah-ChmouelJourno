@@ -1,0 +1,133 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Palette « royale Loubavitch » — vert profond + or (extraits du logo CHMOUEL) */
+
+  /* Famille verte (ex. « sky ») — accent principal */
+  --color-sky: #3a8a4a;        /* vert mid */
+  --color-sky-soft: #74b487;   /* vert clair, voiles */
+  --color-sky-deep: #1c4d2c;   /* VERT ROYAL — texte/accent dominant */
+
+  /* Famille crème (ex. « sand ») — fonds */
+  --color-sand: #f6f1e6;       /* crème ivoire, fond principal */
+  --color-sand-deep: #ebe4d2;  /* crème foncée, surfaces secondaires */
+  --color-cream: #fbf8ee;      /* crème la plus claire, cartes / inputs */
+
+  /* Encre */
+  --color-ink: #1a1a1a;        /* texte principal */
+  --color-ink-soft: #4a4a4a;   /* texte secondaire */
+
+  /* Famille or (ex. « sun » / « sage ») — accents luxe */
+  --color-sun: #c08e2c;        /* OR ROYAL — accents et reflets */
+  --color-sage: #e2b65a;       /* or clair (highlights, dégradés) */
+  --color-sage-deep: #a07520;  /* or profond (ombres dorées) */
+
+  /* Polices */
+  --font-luxe: var(--font-cinzel);       /* capitales romaines — BIG titres */
+  --font-display: var(--font-cormorant); /* serif raffinée — titres moyens */
+  --font-hebrew: var(--font-frank);
+  --font-body: var(--font-inter);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  background-color: var(--color-sand);
+}
+
+body {
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Le fond d'écran (séquence de frames pilotée par le scroll + voile) est géré
+   par le composant <VideoBackground /> rendu en tête de page. */
+
+@keyframes shimmer-button {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* ===== Boutons premium : dégradé vert royal + reflet doré qui balaie ===== */
+.btn-premium {
+  position: relative;
+  overflow: hidden;
+  color: var(--color-cream);
+  background-image: linear-gradient(135deg, #3a8a4a 0%, #1c4d2c 45%, #143922 100%);
+  box-shadow:
+    0 10px 24px rgba(28, 77, 44, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.30),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.12);
+  transition: filter 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+.btn-premium::after {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: -65%;
+  width: 45%;
+  height: 140%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 232, 170, 0.7) 50%,
+    transparent 100%
+  );
+  transform: skewX(-22deg);
+  animation: btn-sheen 5s ease-in-out infinite;
+  pointer-events: none;
+}
+.btn-premium:hover {
+  filter: brightness(1.07);
+  transform: translateY(-1px);
+  box-shadow:
+    0 14px 30px rgba(28, 77, 44, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+@keyframes btn-sheen {
+  0% { left: -65%; }
+  30%, 100% { left: 135%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-premium::after { animation: none; }
+}
+
+/* ===== Reflet doré qui balaie les titres (vert royal → or → vert royal) ===== */
+.shine-gold {
+  background-image: linear-gradient(
+    110deg,
+    var(--color-sky-deep) 0%,
+    var(--color-sky-deep) 42%,
+    var(--color-sun) 50%,
+    #fff3d0 52%,
+    var(--color-sky-deep) 60%,
+    var(--color-sky-deep) 100%
+  );
+  background-size: 250% 100%;
+  background-position: 150% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: shine-gold-move 6.5s ease-in-out infinite;
+}
+@keyframes shine-gold-move {
+  0% { background-position: 150% 0; }
+  45%, 100% { background-position: -50% 0; }
+}
+
+/* ===== Particules de lumière (étincelles dorées) ===== */
+@keyframes particle-float {
+  0%, 100% { transform: translateY(6px) scale(0.9); opacity: 0.10; }
+  50% { transform: translateY(-14px) scale(1.12); opacity: 0.5; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shine-gold { animation: none; }
+}

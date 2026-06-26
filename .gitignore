@@ -1,4 +1,16 @@
 .claude/
 .DS_Store
 *.log
+*.pem
+*.tsbuildinfo
+
 node_modules/
+/.next/
+/out/
+/build
+/.vercel
+
+.env*.local
+next-env.d.ts
+
+public/images/*.mp4

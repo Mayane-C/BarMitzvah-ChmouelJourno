@@ -63,7 +63,7 @@ export const content = {
       {
         id: 'priere-770',
         titre: 'Prière du matin au 770',
-        icon: 'star',
+        icon: '770',
         date: 'Dimanche 23 août 2026',
         heure: 'Matin',
         lieu: '770 — Synagogue du Rabbi',

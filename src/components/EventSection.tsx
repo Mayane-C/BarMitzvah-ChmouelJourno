@@ -116,12 +116,31 @@ function SeferIcon(p: IconProps) {
   );
 }
 
-/** Étoile de David — pour la prière du matin au 770. */
+/** Étoile de David (réserve). */
 function StarOfDavidIcon(p: IconProps) {
   return (
     <IconShell {...p}>
       <polygon points="12,3 3.5,17.7 20.5,17.7" />
       <polygon points="12,21 3.5,6.3 20.5,6.3" />
+    </IconShell>
+  );
+}
+
+/**
+ * Silhouette du 770 — façade Gothic Revival avec ses 3 arches caractéristiques
+ * et son pignon pointu. Référence historique : 770 Eastern Parkway, Brooklyn.
+ */
+function SevenSeventyIcon(p: IconProps) {
+  return (
+    <IconShell {...p}>
+      {/* Façade + pignon pointu */}
+      <path d="M3 21 L 3 9 L 12 3 L 21 9 L 21 21 Z" />
+      {/* 3 fenêtres arquées */}
+      <path d="M5.5 16 L 5.5 13 Q 5.5 11.5 7 11.5 Q 8.5 11.5 8.5 13 L 8.5 16 Z" />
+      <path d="M10.5 16 L 10.5 13 Q 10.5 11.5 12 11.5 Q 13.5 11.5 13.5 13 L 13.5 16 Z" />
+      <path d="M15.5 16 L 15.5 13 Q 15.5 11.5 17 11.5 Q 18.5 11.5 18.5 13 L 18.5 16 Z" />
+      {/* Porte arquée */}
+      <path d="M10.5 21 L 10.5 18.5 Q 10.5 17.5 12 17.5 Q 13.5 17.5 13.5 18.5 L 13.5 21" />
     </IconShell>
   );
 }
@@ -150,6 +169,7 @@ const TITLE_ICONS: Record<string, React.ComponentType<IconProps>> = {
   star: StarOfDavidIcon,
   crown: CrownIcon,
   party: PartyPopper,
+  '770': SevenSeventyIcon,
 };
 
 /** Mini drapeau « tampon postal » — encadré d'un filet doré. */

@@ -39,7 +39,7 @@ const frankHe = Frank_Ruhl_Libre({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://chmouel-journo.vercel.app'),
+  metadataBase: new URL('https://bm-chmouel-journo.vercel.app'),
   title: 'Bar Mitsva Chmouel Journo',
   description:
     "Faire-part d'invitation — Bar Mitsva Chmouel Journo · Dimanche 30 août 2026",

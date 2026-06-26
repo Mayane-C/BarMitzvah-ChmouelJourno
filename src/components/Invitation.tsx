@@ -77,10 +77,10 @@ function ZoneHeader({
 }) {
   return (
     <div id={id} className="px-6 pt-24 pb-6 text-center scroll-mt-24">
-      {/* Ornement en losange doré au-dessus */}
+      {/* Mini-couronne dorée au-dessus */}
       <div className="flex items-center justify-center gap-3 mb-5">
         <span className="block w-10 h-px bg-sun" />
-        <span className="text-sun text-base leading-none">◆</span>
+        <CrownOrnament className="text-sun" size={16} />
         <span className="block w-10 h-px bg-sun" />
       </div>
 

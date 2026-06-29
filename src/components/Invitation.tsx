@@ -59,9 +59,12 @@ export function Invitation() {
         <Hero onDiscover={discover} introState={introState} />
         <Announcement />
 
-        <ChmouelPhotoStage id="chmouel-photo-1a" />
-        <ChmouelPhotoStage id="chmouel-photo-2" />
-        <ChmouelPhotoStage id="chmouel-photo-1b" />
+        {/* Cycle photos : image 1 (intro) → image 2 → image 1 (transition brève
+            avant le texte). Le boy défile en un seul scroll, image 1 sa 2e
+            apparition est volontairement très courte pour ne pas s'attarder. */}
+        <ChmouelPhotoStage id="chmouel-photo-1a" h="35vh" />
+        <ChmouelPhotoStage id="chmouel-photo-2" h="30vh" />
+        <ChmouelPhotoStage id="chmouel-photo-1b" h="20vh" />
 
         <ZoneHeader
           id="new-york"
@@ -133,10 +136,16 @@ function ZoneSeparator() {
 }
 
 /**
- * Étage demi-écran sans contenu — révélation rapide du fond.
- * Plus court qu'un viewport complet pour que l'utilisateur enchaîne
- * naturellement vers le texte qui suit.
+ * Étage sans contenu — révélation rapide du fond. Hauteur ajustable via
+ * `h` pour pouvoir donner moins de scroll à l'image 1 sur sa 2e
+ * apparition (transition brève avant le texte).
  */
-function ChmouelPhotoStage({ id }: { id: string }) {
-  return <section id={id} className="h-[55vh] min-h-[55dvh]" aria-hidden="true" />;
+function ChmouelPhotoStage({ id, h }: { id: string; h: string }) {
+  return (
+    <section
+      id={id}
+      style={{ height: h, minHeight: h }}
+      aria-hidden="true"
+    />
+  );
 }

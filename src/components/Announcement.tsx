@@ -128,30 +128,30 @@ function CurvedHebrew({
 // Très lent et contemplatif — l'animation se déroule pendant que les portes
 // du 770 s'ouvrent (intro de 4 s) et continue ensuite jusqu'à la fin.
 const container: Variants = {
-  hidden: { opacity: 0, y: 130 },
+  hidden: { opacity: 0, y: 150 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 4.2,
+      duration: 6.0,
       ease: [0.22, 1, 0.36, 1],
       when: 'beforeChildren',
-      staggerChildren: 0.7,
-      delayChildren: 0.4,
+      staggerChildren: 0.9,
+      delayChildren: 0.2,
     },
   },
 };
 const item: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 2.2, ease: [0.22, 1, 0.36, 1] } },
+  hidden: { opacity: 0, y: 32 },
+  visible: { opacity: 1, y: 0, transition: { duration: 2.8, ease: [0.22, 1, 0.36, 1] } },
 };
 const itemName: Variants = {
-  hidden: { opacity: 0, y: 30, scale: 0.96 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 2.6, ease: [0.22, 1, 0.36, 1] } },
+  hidden: { opacity: 0, y: 32, scale: 0.96 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 3.2, ease: [0.22, 1, 0.36, 1] } },
 };
 const itemLine: Variants = {
   hidden: { scaleX: 0, opacity: 0 },
-  visible: { scaleX: 1, opacity: 1, transition: { duration: 2.4, ease: [0.22, 1, 0.36, 1] } },
+  visible: { scaleX: 1, opacity: 1, transition: { duration: 3.0, ease: [0.22, 1, 0.36, 1] } },
 };
 
 export function Announcement() {

@@ -32,7 +32,10 @@ export function Invitation() {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = introState === 'done' ? '' : 'hidden';
+    // Verrouillé uniquement à l'idle ; dès qu'on clique « Découvrir »,
+    // le scroll est libéré pour que la page glisse vers l'annonce pendant
+    // que les portes du 770 s'ouvrent.
+    document.body.style.overflow = introState === 'idle' ? 'hidden' : '';
     return () => {
       document.body.style.overflow = '';
     };
@@ -42,13 +45,13 @@ export function Invitation() {
     if (introState !== 'idle') return;
     setIntroState('playing');
     window.dispatchEvent(new Event('ltd:play-intro'));
-    // Durée de l'intro de BackgroundSequence (4s) — synchroniser.
-    setTimeout(() => {
-      setIntroState('done');
-      requestAnimationFrame(() => {
-        document.getElementById('annonce')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    }, 4000);
+    // Scroll vers l'annonce dès le clic, en parallèle de l'ouverture
+    // des portes — l'invité voit le faire-part se révéler pendant la
+    // vidéo.
+    requestAnimationFrame(() => {
+      document.getElementById('annonce')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    setTimeout(() => setIntroState('done'), 4000);
   };
 
   return (

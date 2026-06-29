@@ -2,6 +2,9 @@ import { ImageResponse } from 'next/og';
 import fs from 'node:fs';
 import path from 'node:path';
 
+// Génère l'OG image au moment du build (compatible output: 'export').
+export const dynamic = 'force-static';
+
 export const alt = 'Invitation — Bar Mitsva Chmouel Journo · Dimanche 30 août 2026';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';

@@ -218,10 +218,11 @@ export function BackgroundSequence() {
       const bSrc = targetSrcCurrent;
       const bOpacity = crossfade;
 
-      // Sépia + désaturation appliqués uniquement sur les frames du 770
-      // (bâtiment debut). La photo du boy et la vidéo fin restent intactes.
+      // Sépia + désaturation appliqués uniquement sur le hero figé
+      // (avant le clic Découvrir). Dès que l'intro démarre ou se termine,
+      // on revient à des images nettes.
       const filterFor = (src: string) =>
-        src.includes('/frames/debut/')
+        src.includes('/frames/debut/') && phaseRef.current === 'debut-frozen'
           ? 'sepia(0.4) saturate(0.7) brightness(1.05)'
           : 'none';
 

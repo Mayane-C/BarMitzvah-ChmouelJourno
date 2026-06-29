@@ -7,7 +7,6 @@ import { Announcement } from '@/components/Announcement';
 import { EventSection } from '@/components/EventSection';
 import { RSVP } from '@/components/RSVP';
 import { Footer } from '@/components/Footer';
-import { CrownOrnament } from '@/components/Ornaments';
 import { BackgroundSequence } from '@/components/BackgroundSequence';
 import { ZoneBand } from '@/components/Bands';
 import { content } from '@/lib/content';
@@ -76,8 +75,6 @@ export function Invitation() {
           <EventSection key={e.id} id={e.id} event={e} accent="sky" flag="us" />
         ))}
 
-        <ZoneSeparator />
-
         <ZoneBand
           id="paris"
           label="En France"
@@ -91,16 +88,6 @@ export function Invitation() {
       </main>
       <Footer />
     </>
-  );
-}
-
-function ZoneSeparator() {
-  return (
-    <div className="my-12 mx-auto max-w-md flex items-center justify-center gap-4 px-6">
-      <span className="block flex-1 h-px bg-sun/40" />
-      <CrownOrnament className="text-sun" size={22} />
-      <span className="block flex-1 h-px bg-sun/40" />
-    </div>
   );
 }
 

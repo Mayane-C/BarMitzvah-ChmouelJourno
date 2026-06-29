@@ -125,37 +125,47 @@ function CurvedHebrew({
 }
 
 // Cascade : le conteneur orchestre l'apparition l'un après l'autre des éléments.
-// Apparition lente et contemplative, depuis le bas, démarrée bien avant que
-// le bloc entre visuellement dans le viewport.
+// Très lent et contemplatif — l'animation se déroule pendant que les portes
+// du 770 s'ouvrent (intro de 4 s) et continue ensuite jusqu'à la fin.
 const container: Variants = {
-  hidden: { opacity: 0, y: 110 },
+  hidden: { opacity: 0, y: 130 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 2.4,
+      duration: 4.2,
       ease: [0.22, 1, 0.36, 1],
       when: 'beforeChildren',
-      staggerChildren: 0.45,
-      delayChildren: 0.1,
+      staggerChildren: 0.7,
+      delayChildren: 0.4,
     },
   },
 };
 const item: Variants = {
-  hidden: { opacity: 0, y: 26 },
-  visible: { opacity: 1, y: 0, transition: { duration: 1.6, ease: [0.22, 1, 0.36, 1] } },
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 2.2, ease: [0.22, 1, 0.36, 1] } },
 };
 const itemName: Variants = {
-  hidden: { opacity: 0, y: 26, scale: 0.96 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 2.0, ease: [0.22, 1, 0.36, 1] } },
+  hidden: { opacity: 0, y: 30, scale: 0.96 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 2.6, ease: [0.22, 1, 0.36, 1] } },
 };
 const itemLine: Variants = {
   hidden: { scaleX: 0, opacity: 0 },
-  visible: { scaleX: 1, opacity: 1, transition: { duration: 1.8, ease: [0.22, 1, 0.36, 1] } },
+  visible: { scaleX: 1, opacity: 1, transition: { duration: 2.4, ease: [0.22, 1, 0.36, 1] } },
 };
 
 export function Announcement() {
   const [crownOk, setCrownOk] = useState(true);
+  // Déclenchement de l'apparition au moment où les portes du 770
+  // commencent à s'ouvrir (événement `ltd:play-intro` dispatché par
+  // Hero quand l'utilisateur clique « Découvrir »). Pas de déclenchement
+  // au scroll — l'animation est synchronisée avec l'intro vidéo.
+  const [revealed, setRevealed] = useState(false);
+  useEffect(() => {
+    const onIntro = () => setRevealed(true);
+    window.addEventListener('ltd:play-intro', onIntro);
+    return () => window.removeEventListener('ltd:play-intro', onIntro);
+  }, []);
 
   return (
     <section id="annonce" className="relative py-24 md:py-32 px-6">
@@ -167,8 +177,7 @@ export function Announcement() {
         }}
         variants={container}
         initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0, margin: '0px 0px 35% 0px' }}
+        animate={revealed ? 'visible' : 'hidden'}
       >
         {/* בס״ד (centré pour ne pas être masqué par l'arche) */}
         <motion.p variants={item} className="font-hebrew text-ink-soft/70 text-sm mb-3">

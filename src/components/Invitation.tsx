@@ -77,12 +77,8 @@ function ZoneHeader({
 }) {
   return (
     <div id={id} className="px-6 pt-24 pb-6 text-center scroll-mt-24">
-      {/* Mini-couronne dorée au-dessus */}
-      <div className="flex items-center justify-center gap-3 mb-5">
-        <span className="block w-10 h-px bg-sun" />
-        <CrownOrnament className="text-sun" size={16} />
-        <span className="block w-10 h-px bg-sun" />
-      </div>
+      {/* Fine ligne dorée fondue au-dessus */}
+      <div className="mx-auto mb-5 h-px w-44 md:w-56 bg-gradient-to-r from-transparent via-sun to-transparent" />
 
       <h2 className="font-luxe font-normal text-xl md:text-2xl tracking-[0.42em] uppercase text-sky-deep">
         {label}
@@ -94,11 +90,8 @@ function ZoneHeader({
         </p>
       )}
 
-      <div className="flex items-center justify-center gap-3 mt-5">
-        <span className="block w-16 h-px bg-sun" />
-        <CrownOrnament className="text-sun" size={16} />
-        <span className="block w-16 h-px bg-sun" />
-      </div>
+      {/* Ligne dorée fondue en dessous */}
+      <div className="mx-auto mt-5 h-px w-44 md:w-56 bg-gradient-to-r from-transparent via-sun to-transparent" />
     </div>
   );
 }

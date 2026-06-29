@@ -8,36 +8,60 @@ import { EventSection } from '@/components/EventSection';
 import { RSVP } from '@/components/RSVP';
 import { Footer } from '@/components/Footer';
 import { CrownOrnament } from '@/components/Ornaments';
+import { BackgroundSequence } from '@/components/BackgroundSequence';
 import { content } from '@/lib/content';
 
 /**
  * Page d'invitation complète (scroll unique).
- * Le scroll est bloqué tant que l'invité n'a pas cliqué sur « Découvrir ».
+ *
+ * Flux du « Découvrir » :
+ *   1. Page chargée : hero visible, body scroll bloqué, vidéo début figée
+ *      sur la frame 1.
+ *   2. Clic sur « Découvrir » → on déclenche `ltd:play-intro` : le
+ *      contenu du hero disparaît en fondu, BackgroundSequence anime la
+ *      vidéo début frame 1 → 240 (cinematic intro, ~4s).
+ *   3. À la fin de l'intro, le scroll est débloqué et la page glisse en
+ *      douceur jusqu'au faire-part.
  */
 export function Invitation() {
-  const [discovered, setDiscovered] = useState(false);
+  const [introState, setIntroState] = useState<'idle' | 'playing' | 'done'>('idle');
 
-  // Au (re)chargement de la page : on revient toujours au hero.
   useEffect(() => {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = discovered ? '' : 'hidden';
+    document.body.style.overflow = introState === 'done' ? '' : 'hidden';
     return () => {
       document.body.style.overflow = '';
     };
-  }, [discovered]);
+  }, [introState]);
+
+  const discover = () => {
+    if (introState !== 'idle') return;
+    setIntroState('playing');
+    window.dispatchEvent(new Event('ltd:play-intro'));
+    // Durée de l'intro de BackgroundSequence (4s) — synchroniser.
+    setTimeout(() => {
+      setIntroState('done');
+      requestAnimationFrame(() => {
+        document.getElementById('annonce')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }, 4000);
+  };
 
   return (
     <>
-      <Header includeChabbat={false} onReveal={() => setDiscovered(true)} />
+      <BackgroundSequence />
+      <Header includeChabbat={false} onReveal={discover} />
       <main>
-        <Hero onDiscover={() => setDiscovered(true)} />
+        <Hero onDiscover={discover} introState={introState} />
         <Announcement />
 
-        <ChmouelPhotoSlot />
+        <ChmouelPhotoStage id="chmouel-photo-1a" />
+        <ChmouelPhotoStage id="chmouel-photo-2" />
+        <ChmouelPhotoStage id="chmouel-photo-1b" />
 
         <ZoneHeader
           id="new-york"
@@ -77,20 +101,15 @@ function ZoneHeader({
 }) {
   return (
     <div id={id} className="px-6 pt-24 pb-6 text-center scroll-mt-24">
-      {/* Fine ligne dorée fondue au-dessus */}
       <div className="mx-auto mb-5 h-px w-44 md:w-56 bg-gradient-to-r from-transparent via-sun to-transparent" />
-
       <h2 className="font-luxe font-normal text-xl md:text-2xl tracking-[0.42em] uppercase text-sky-deep">
         {label}
       </h2>
-
       {subtitle && (
         <p className="font-display italic text-ink-soft/80 text-base md:text-lg mt-3">
           {subtitle}
         </p>
       )}
-
-      {/* Ligne dorée fondue en dessous */}
       <div className="mx-auto mt-5 h-px w-44 md:w-56 bg-gradient-to-r from-transparent via-sun to-transparent" />
     </div>
   );
@@ -107,10 +126,10 @@ function ZoneSeparator() {
 }
 
 /**
- * Espace réservé pour la future illustration cartoon de Chmouel
- * (inséré entre le faire-part et la première zone d'événements).
- * Quand l'image sera prête, ajouter une <img /> à l'intérieur.
+ * Étage plein écran sans contenu — le fond (géré par BackgroundSequence)
+ * occupe seul l'espace pendant ce viewport. Utilisé pour les 3 viewports
+ * de photos Chmouel entre le faire-part et les blocs d'événements.
  */
-function ChmouelPhotoSlot() {
-  return <section id="chmouel-portrait" className="h-48 md:h-64" aria-hidden="true" />;
+function ChmouelPhotoStage({ id }: { id: string }) {
+  return <section id={id} className="h-screen min-h-dvh" aria-hidden="true" />;
 }

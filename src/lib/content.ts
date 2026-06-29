@@ -114,34 +114,36 @@ export const content = {
     logoLTD: '/images/ltd-logo.png',              // signature footer
   },
 
-  // ===== À venir — placeholders =====
+  // Vidéos d'arrière-plan, découpées en séquences d'images JPG pour pouvoir
+  // être pilotées finement par scroll / animation (et fonctionner sur iOS sans
+  // autoplay). Voir BackgroundSequence.
+  videos: {
+    debut: {
+      base: '/frames/debut/f',
+      count: 240,
+      pad: 3,
+      ext: '.jpg',
+      rotation: 0,
+    },
+    fin: {
+      base: '/frames/fin/f',
+      count: 240,
+      pad: 3,
+      ext: '.jpg',
+      rotation: 0,
+    },
+  },
+
+  // Photos pleine page de Chmouel — affichées comme fond entre le faire-part
+  // et les blocs d'événements (séquence 1 → 2 → 1).
+  photos: {
+    chmouel1: '/images/chmouel-photo-1.png',
+    chmouel2: '/images/chmouel-photo-2.png',
+  },
 
   // Musique de fond — fichier à placer dans public/music/
   musique: {
     src: '', // TODO : chemin du MP3
-  },
-
-  // Fond animé piloté par le scroll — séquence d'images (frames cartoon).
-  // Placer les frames dans public/frames/ et passer count à leur nombre exact.
-  // 0 = pas de fond animé pour l'instant.
-  video: {
-    rotation: 0,
-    frames: {
-      base: '/frames/f',
-      count: 0,
-      pad: 3,
-      ext: '.jpg',
-    },
-  },
-
-  // Galerie photos (carrousel) — à remplir quand les photos seront prêtes
-  galerie: {
-    photos: [] as ReadonlyArray<{
-      src: string;
-      alt: string;
-      legende: string;
-      focus?: string;
-    }>,
   },
 } as const;
 

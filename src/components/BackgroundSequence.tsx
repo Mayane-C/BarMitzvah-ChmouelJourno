@@ -228,15 +228,19 @@ export function BackgroundSequence() {
 
       if (aSrc !== lastA) {
         layerARef.current?.setAttribute('src', aSrc);
-        if (layerARef.current) layerARef.current.style.filter = filterFor(aSrc);
         lastA = aSrc;
       }
       if (bSrc !== lastB) {
         layerBRef.current?.setAttribute('src', bSrc);
-        if (layerBRef.current) layerBRef.current.style.filter = filterFor(bSrc);
         lastB = bSrc;
       }
-      if (layerBRef.current) layerBRef.current.style.opacity = String(bOpacity);
+      // On ré-évalue le filtre à chaque tick (la condition dépend de
+      // phaseRef qui peut changer sans que le src ait changé).
+      if (layerARef.current) layerARef.current.style.filter = filterFor(aSrc);
+      if (layerBRef.current) {
+        layerBRef.current.style.filter = filterFor(bSrc);
+        layerBRef.current.style.opacity = String(bOpacity);
+      }
 
       raf = requestAnimationFrame(tick);
     };

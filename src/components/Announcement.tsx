@@ -290,35 +290,6 @@ export function Announcement() {
           </motion.p>
         )}
       </motion.div>
-
-      {/* Indicateur « faites défiler » — apparaît une fois le faire-part
-         révélé (déclenché par le même événement intro), puis reste
-         affiché. Non lié au scroll. */}
-      <motion.div
-        className="mt-10 md:mt-14 flex flex-col items-center gap-2 text-sun"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: revealed ? 1 : 0 }}
-        transition={{ duration: 1.2, delay: revealed ? 5 : 0 }}
-      >
-        <span className="font-display italic text-ink-soft/80 text-sm md:text-base tracking-wide">
-          Faites défiler
-        </span>
-        <motion.svg
-          width="22"
-          height="22"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <path d="M6 9 L 12 15 L 18 9" />
-        </motion.svg>
-      </motion.div>
     </section>
   );
 }

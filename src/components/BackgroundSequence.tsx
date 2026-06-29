@@ -93,7 +93,10 @@ export function BackgroundSequence() {
 
       boundariesRef.current = {
         heroEnd: hero.offsetTop + hero.offsetHeight,
-        annonceEnd: annonce.offsetTop + annonce.offsetHeight,
+        // annonceEnd anticipé à 75 % de la hauteur du bloc : la photo 1
+        // entre en fond pile au moment où le bas du faire-part atteint
+        // les 3/4 inférieurs du viewport (synchrone avec ScrollHint).
+        annonceEnd: annonce.offsetTop + annonce.offsetHeight * 0.75,
         photo1aEnd: p1a.offsetTop + p1a.offsetHeight,
         photo2End: p2.offsetTop + p2.offsetHeight,
         photo1bEnd: p1b.offsetTop + p1b.offsetHeight,

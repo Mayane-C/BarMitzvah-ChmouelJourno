@@ -100,22 +100,25 @@ function ZoneHeader({
   subtitle?: string;
 }) {
   return (
-    <div id={id} className="px-6 pt-20 pb-10 text-center scroll-mt-24">
-      {/* Panneau crème en backdrop pour faire ressortir le label sur le fond
-         photo. Ombrage doux + filet doré horizontal. */}
-      <div className="inline-block max-w-md mx-auto bg-cream/85 backdrop-blur-[2px] rounded-2xl shadow-md shadow-sky-deep/10 px-8 py-7 md:px-12 md:py-8">
-        <div className="mx-auto mb-4 h-px w-32 md:w-40 bg-gradient-to-r from-transparent via-sun to-transparent" />
-        <h2 className="font-luxe font-normal text-xl md:text-2xl tracking-[0.42em] uppercase text-sky-deep">
-          {label}
-        </h2>
-        {subtitle && (
-          <p className="font-display italic text-ink-soft/85 text-base md:text-lg mt-2">
-            {subtitle}
-          </p>
-        )}
-        <div className="mx-auto mt-4 h-px w-32 md:w-40 bg-gradient-to-r from-transparent via-sun to-transparent" />
-      </div>
-    </div>
+    <section
+      id={id}
+      className="relative scroll-mt-24 w-full bg-cream/75 backdrop-blur-sm py-10 md:py-14 text-center"
+      style={{
+        borderTop: '1px solid rgba(192, 142, 44, 0.7)',
+        borderBottom: '1px solid rgba(192, 142, 44, 0.7)',
+        boxShadow:
+          '0 1px 0 rgba(192, 142, 44, 0.25) inset, 0 -1px 0 rgba(192, 142, 44, 0.25) inset',
+      }}
+    >
+      <h2 className="font-luxe font-normal text-2xl md:text-4xl tracking-[0.42em] uppercase text-sky-deep">
+        {label}
+      </h2>
+      {subtitle && (
+        <p className="font-display italic text-ink-soft/85 text-base md:text-xl mt-2">
+          {subtitle}
+        </p>
+      )}
+    </section>
   );
 }
 

@@ -279,15 +279,16 @@ export function BackgroundSequence() {
         style={{ opacity: 0 }}
       />
       {/* Overlay du hero — actif avant le clic « Découvrir ». Voile crème
-          qui adoucit le fond du 770 et fait ressortir le vert royal des
-          écritures + l'or de la couronne. Fondu à 0 pendant l'intro. */}
+          dense + soupçon de vignette sombre dans les angles pour faire
+          ressortir au maximum le vert royal des écritures et l'or de la
+          couronne. Fondu à 0 pendant l'intro. */}
       <div
         ref={heroOverlayRef}
         className="absolute inset-0 pointer-events-none"
         style={{
           opacity: 1,
           background:
-            'linear-gradient(to bottom, rgba(246,241,230,0.78) 0%, rgba(246,241,230,0.62) 55%, rgba(246,241,230,0.80) 100%)',
+            'radial-gradient(ellipse at center, rgba(246,241,230,0.86) 0%, rgba(246,241,230,0.90) 55%, rgba(40,32,18,0.55) 100%)',
           transition: 'opacity 0.15s linear',
         }}
       />

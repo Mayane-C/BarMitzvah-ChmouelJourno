@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { submitRSVP } from '@/lib/google-sheets';
 import { content } from '@/lib/content';
 import { CrownOrnament } from '@/components/Ornaments';
+import { ZoneBand } from '@/components/Bands';
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -104,23 +105,13 @@ export function RSVP({ includeChabbat }: { includeChabbat: boolean }) {
   }
 
   return (
-    <section id="rsvp" className="font-display py-24 md:py-32 px-6">
-      <div className="max-w-lg mx-auto">
-        <motion.div
-          className="mb-10 flex justify-center"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-        >
-          <div className="inline-block text-center bg-cream/80 rounded-3xl px-8 py-5 shadow-sm shadow-ink/5">
-            <h2 className="shine-gold font-display text-4xl md:text-5xl mb-2">Répondez-nous</h2>
-            <p className="text-ink text-sm">
-              Merci de confirmer votre présence pour {content.enfant.prenom}.
-            </p>
-          </div>
-        </motion.div>
-
+    <div className="font-display">
+      <ZoneBand
+        id="rsvp"
+        label="Répondez-nous"
+        subtitle={`Merci de confirmer votre présence pour ${content.enfant.prenom}.`}
+      />
+      <div className="max-w-lg mx-auto py-12 md:py-20 px-6">
         <motion.form
           onSubmit={handleSubmit}
           className="bg-cream/85 rounded-3xl shadow-lg shadow-ink/5 p-7 md:p-9 space-y-6"
@@ -280,6 +271,6 @@ export function RSVP({ includeChabbat }: { includeChabbat: boolean }) {
           </button>
         </motion.form>
       </div>
-    </section>
+    </div>
   );
 }

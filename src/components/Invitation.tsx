@@ -9,6 +9,7 @@ import { RSVP } from '@/components/RSVP';
 import { Footer } from '@/components/Footer';
 import { CrownOrnament } from '@/components/Ornaments';
 import { BackgroundSequence } from '@/components/BackgroundSequence';
+import { ZoneBand } from '@/components/Bands';
 import { content } from '@/lib/content';
 
 /**
@@ -66,7 +67,7 @@ export function Invitation() {
         <ChmouelPhotoStage id="chmouel-photo-2" h="30vh" />
         <ChmouelPhotoStage id="chmouel-photo-1b" h="20vh" />
 
-        <ZoneHeader
+        <ZoneBand
           id="new-york"
           label="À New York"
           subtitle="Chez le Rabbi"
@@ -77,7 +78,7 @@ export function Invitation() {
 
         <ZoneSeparator />
 
-        <ZoneHeader
+        <ZoneBand
           id="paris"
           label="En France"
           subtitle="En famille"
@@ -90,38 +91,6 @@ export function Invitation() {
       </main>
       <Footer />
     </>
-  );
-}
-
-function ZoneHeader({
-  id,
-  label,
-  subtitle,
-}: {
-  id: string;
-  label: string;
-  subtitle?: string;
-}) {
-  return (
-    <section
-      id={id}
-      className="relative scroll-mt-24 w-full bg-cream/75 backdrop-blur-sm py-10 md:py-14 text-center"
-      style={{
-        borderTop: '1px solid rgba(192, 142, 44, 0.7)',
-        borderBottom: '1px solid rgba(192, 142, 44, 0.7)',
-        boxShadow:
-          '0 1px 0 rgba(192, 142, 44, 0.25) inset, 0 -1px 0 rgba(192, 142, 44, 0.25) inset',
-      }}
-    >
-      <h2 className="font-luxe font-normal text-2xl md:text-4xl tracking-[0.42em] uppercase text-sky-deep">
-        {label}
-      </h2>
-      {subtitle && (
-        <p className="font-display italic text-ink-soft/85 text-base md:text-xl mt-2">
-          {subtitle}
-        </p>
-      )}
-    </section>
   );
 }
 

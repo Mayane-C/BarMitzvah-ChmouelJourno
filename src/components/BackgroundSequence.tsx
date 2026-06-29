@@ -177,25 +177,15 @@ export function BackgroundSequence() {
       if (y < b.annonceEnd) {
         return { current: frameSrc(DEBUT, DEBUT.count), veil: NO_VEIL };
       }
-      // ----- Mini viewports photo (pure révélation du boy) -----
+      // ----- Mini viewports photo (cycle 1 → 2 → 1, puis disparaît) -----
       if (y < b.photo1aEnd) return { current: PHOTO_1, veil: NO_VEIL };
       if (y < b.photo2End) return { current: PHOTO_2, veil: NO_VEIL };
       if (y < b.photo1bEnd) return { current: PHOTO_1, veil: NO_VEIL };
 
-      // ----- Événements (NY puis France) : le boy reste visible derrière.
-      //       Photo 1 sur la 1re moitié, photo 2 sur la 2e moitié, retour photo 1 vers la fin.
-      if (y < b.rsvpStart) {
-        const start = b.photo1bEnd;
-        const total = Math.max(1, b.rsvpStart - start);
-        const p = (y - start) / total;
-        if (p < 0.33) return { current: PHOTO_1, veil: NO_VEIL };
-        if (p < 0.66) return { current: PHOTO_2, veil: NO_VEIL };
-        return { current: PHOTO_1, veil: NO_VEIL };
-      }
-
-      // ----- RSVP → footer : vidéo fin scroll-tied -----
-      const total = Math.max(1, b.finEnd - b.rsvpStart);
-      const progress = Math.min(1, Math.max(0, (y - b.rsvpStart) / total));
+      // ----- Événements → RSVP → footer : vidéo fin scroll-tied
+      //       (les photos disparaissent dès la fin de photo-1b) -----
+      const total = Math.max(1, b.finEnd - b.photo1bEnd);
+      const progress = Math.min(1, Math.max(0, (y - b.photo1bEnd) / total));
       const targetIdx = Math.max(1, Math.round(1 + progress * (FIN.count - 1)));
       finFrameRef.current += (targetIdx - finFrameRef.current) * 0.2;
       return { current: frameSrc(FIN, Math.round(finFrameRef.current)), veil: NO_VEIL };

@@ -124,17 +124,18 @@ function CurvedHebrew({
   );
 }
 
-// Le bloc faire-part entier remonte d'un seul tenant — pas de cascade
-// élément-par-élément. Tout le contenu intérieur reste solidaire de
-// l'arche, qui se révèle comme un seul ensemble depuis le bas.
+// Le bloc faire-part entier remonte d'un seul tenant depuis le bas du
+// viewport, façon « glissement de carte tirée du dessous ». Mouvement
+// très prononcé (~600 px) pour bien inciter au scroll.
 const container: Variants = {
-  hidden: { opacity: 0, y: 150 },
+  hidden: { opacity: 0, y: 600 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 6.0,
+      duration: 5.5,
       ease: [0.22, 1, 0.36, 1],
+      opacity: { duration: 1.8, ease: 'easeOut' },
     },
   },
 };

@@ -124,9 +124,9 @@ function CurvedHebrew({
   );
 }
 
-// Cascade : le conteneur orchestre l'apparition l'un après l'autre des éléments.
-// Très lent et contemplatif — l'animation se déroule pendant que les portes
-// du 770 s'ouvrent (intro de 4 s) et continue ensuite jusqu'à la fin.
+// Le bloc faire-part entier remonte d'un seul tenant — pas de cascade
+// élément-par-élément. Tout le contenu intérieur reste solidaire de
+// l'arche, qui se révèle comme un seul ensemble depuis le bas.
 const container: Variants = {
   hidden: { opacity: 0, y: 150 },
   visible: {
@@ -135,24 +135,14 @@ const container: Variants = {
     transition: {
       duration: 6.0,
       ease: [0.22, 1, 0.36, 1],
-      when: 'beforeChildren',
-      staggerChildren: 0.9,
-      delayChildren: 0.2,
     },
   },
 };
-const item: Variants = {
-  hidden: { opacity: 0, y: 32 },
-  visible: { opacity: 1, y: 0, transition: { duration: 2.8, ease: [0.22, 1, 0.36, 1] } },
-};
-const itemName: Variants = {
-  hidden: { opacity: 0, y: 32, scale: 0.96 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 3.2, ease: [0.22, 1, 0.36, 1] } },
-};
-const itemLine: Variants = {
-  hidden: { scaleX: 0, opacity: 0 },
-  visible: { scaleX: 1, opacity: 1, transition: { duration: 3.0, ease: [0.22, 1, 0.36, 1] } },
-};
+// Variants neutres pour les enfants — ils suivent l'animation du conteneur
+// (par héritage transform/opacity du parent) sans animation propre.
+const item: Variants = { hidden: {}, visible: {} };
+const itemName: Variants = { hidden: {}, visible: {} };
+const itemLine: Variants = { hidden: {}, visible: {} };
 
 export function Announcement() {
   const [crownOk, setCrownOk] = useState(true);
@@ -290,14 +280,14 @@ export function Announcement() {
         )}
       </motion.div>
 
-      {/* Indicateur « faites défiler » — apparaît une fois après que le
-         faire-part ait fini de se révéler, puis reste affiché. Non lié
-         au scroll. */}
+      {/* Indicateur « faites défiler » — apparaît une fois le faire-part
+         révélé (déclenché par le même événement intro), puis reste
+         affiché. Non lié au scroll. */}
       <motion.div
         className="mt-10 md:mt-14 flex flex-col items-center gap-2 text-sun"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.2, delay: 2.5 }}
+        animate={{ opacity: revealed ? 1 : 0 }}
+        transition={{ duration: 1.2, delay: revealed ? 5 : 0 }}
       >
         <span className="font-display italic text-ink-soft/80 text-sm md:text-base tracking-wide">
           Faites défiler

@@ -125,33 +125,33 @@ function CurvedHebrew({
 }
 
 // Cascade : le conteneur orchestre l'apparition l'un après l'autre des éléments.
-// Durées allongées + remontée prononcée pour une révélation contemplative du
-// faire-part depuis le bas.
+// Apparition lente et contemplative, depuis le bas, démarrée bien avant que
+// le bloc entre visuellement dans le viewport.
 const container: Variants = {
-  hidden: { opacity: 0, y: 90 },
+  hidden: { opacity: 0, y: 110 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 1.4,
+      duration: 2.4,
       ease: [0.22, 1, 0.36, 1],
       when: 'beforeChildren',
-      staggerChildren: 0.28,
-      delayChildren: 0.35,
+      staggerChildren: 0.45,
+      delayChildren: 0.1,
     },
   },
 };
 const item: Variants = {
-  hidden: { opacity: 0, y: 22 },
-  visible: { opacity: 1, y: 0, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] } },
+  hidden: { opacity: 0, y: 26 },
+  visible: { opacity: 1, y: 0, transition: { duration: 1.6, ease: [0.22, 1, 0.36, 1] } },
 };
 const itemName: Variants = {
-  hidden: { opacity: 0, y: 22, scale: 0.96 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 1.5, ease: [0.22, 1, 0.36, 1] } },
+  hidden: { opacity: 0, y: 26, scale: 0.96 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 2.0, ease: [0.22, 1, 0.36, 1] } },
 };
 const itemLine: Variants = {
   hidden: { scaleX: 0, opacity: 0 },
-  visible: { scaleX: 1, opacity: 1, transition: { duration: 1.4, ease: [0.22, 1, 0.36, 1] } },
+  visible: { scaleX: 1, opacity: 1, transition: { duration: 1.8, ease: [0.22, 1, 0.36, 1] } },
 };
 
 export function Announcement() {
@@ -168,7 +168,7 @@ export function Announcement() {
         variants={container}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.05, margin: '0px 0px -10% 0px' }}
+        viewport={{ once: true, amount: 0, margin: '0px 0px 35% 0px' }}
       >
         {/* בס״ד (centré pour ne pas être masqué par l'arche) */}
         <motion.p variants={item} className="font-hebrew text-ink-soft/70 text-sm mb-3">

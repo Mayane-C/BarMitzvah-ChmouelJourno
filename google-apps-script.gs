@@ -1,31 +1,39 @@
 /**
- * Google Apps Script — RSVP Bar Mitsva de Raphaël.
+ * Google Apps Script — RSVP Bar Mitsva de Chmouel Journo.
  * Cases « Pas présent » (cases à cocher) intégrées aux blocs Soirée/Chabbat.
  *
  * MISE EN PLACE / RÉPARATION
- * 1. Colle TOUT ce code → Enregistre.
- * 2. Fonction « repair » → ▶ Exécuter  (remonte les données en haut + nettoie).
- * 3. Déployer → Gérer les déploiements → ✏️ → Nouvelle version → Déployer.
+ * 1. Colle TOUT ce code dans l'éditeur Apps Script → Enregistre.
+ * 2. Fonction « setup » → ▶ Exécuter une fois (autorise les permissions,
+ *    crée la feuille « Réponses » et l'onglet « Récapitulatif »).
+ * 3. Déployer → Nouveau déploiement → Type : Web App
+ *      Exécuter en tant que : moi
+ *      Qui a accès : Tout le monde
+ *    → Copier l'URL « /exec » et la coller dans .env.local
+ *      sous NEXT_PUBLIC_GOOGLE_SCRIPT_URL=…
+ * 4. À chaque modif du code : Déployer → Gérer les déploiements → ✏️ →
+ *    Nouvelle version → Déployer (sinon les changements ne s'appliquent pas).
  */
 
 var PROP_KEY = 'RSVP_SHEET_ID';
 var LAYOUT_KEY = 'RSVP_LAYOUT';
 var LAYOUT_V = 'v2-blocs';
-var SECRET = 'akoun-rapha-2026-mer';
+var SECRET = 'chmouel-journo-2026-bm';
 
-var C_SOIREE = '#2e7a93';
-var C_CHABBAT = '#5f8676';
-var C_SOIREE_LIGHT = '#d7e7ee';
-var C_CHABBAT_LIGHT = '#dfe9e3';
-var C_SAND = '#e7d8be';
-var C_INK = '#33454f';
-var C_BORDER = '#b9c7cf';
+// Palette « royale Loubavitch » alignée sur le site (vert profond + or).
+var C_SOIREE = '#1c4d2c';        // vert royal
+var C_CHABBAT = '#c08e2c';       // or
+var C_SOIREE_LIGHT = '#d3e0d6';  // vert clair
+var C_CHABBAT_LIGHT = '#f3e6c4'; // or clair
+var C_SAND = '#f6f1e6';          // crème
+var C_INK = '#1a1a1a';
+var C_BORDER = '#c9b88e';
 
 function getSpreadsheet_() {
   var props = PropertiesService.getScriptProperties();
   var id = props.getProperty(PROP_KEY);
   if (id) { try { return SpreadsheetApp.openById(id); } catch (e) {} }
-  var ss = SpreadsheetApp.create('RSVP — Bar Mitsva Raphaël');
+  var ss = SpreadsheetApp.create('RSVP — Bar Mitsva Chmouel');
   props.setProperty(PROP_KEY, ss.getId());
   return ss;
 }
@@ -51,7 +59,7 @@ function buildHeader_(sheet) {
   sheet.getRange('C1:C2').merge().setValue('Nom');
   sheet.getRange('D1:G1').merge().setValue('LA SOIRÉE');
   sheet.getRange('H1:K1').merge().setValue('LE CHABBAT');
-  sheet.getRange('L1:L2').merge().setValue('Message pour Raphaël');
+  sheet.getRange('L1:L2').merge().setValue('Message pour Chmouel');
 
   sheet.getRange('D2').setValue('Adultes');
   sheet.getRange('E2').setValue('Enfants');
@@ -186,7 +194,7 @@ function doPost(e) {
 }
 
 function doGet() {
-  return ContentService.createTextOutput('Le service RSVP est actif.').setMimeType(ContentService.MimeType.TEXT);
+  return ContentService.createTextOutput('Le service RSVP de Chmouel est actif.').setMimeType(ContentService.MimeType.TEXT);
 }
 
 function updateSummary(ss) {

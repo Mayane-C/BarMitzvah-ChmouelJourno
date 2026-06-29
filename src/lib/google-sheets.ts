@@ -13,16 +13,15 @@ export interface RSVPFormData {
   version: 'soiree' | 'chabbat';
 }
 
-// URL du script Apps Script (RSVP → Google Sheet).
-const DEFAULT_GOOGLE_SCRIPT_URL =
-  'https://script.google.com/macros/s/AKfycbxA9xB8B0JCXkIKdKpkEX5x7hZh5df45Q_ijvt-q70hQIBNG1b2YR1HECa7VyZUcwCK/exec';
-
-const GOOGLE_SCRIPT_URL =
-  process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL || DEFAULT_GOOGLE_SCRIPT_URL;
+// URL du Web App Apps Script (RSVP → Google Sheet de Chmouel).
+// À remplir dans .env.local + dans les env vars Vercel.
+// Pas de fallback : si l'URL n'est pas configurée, le formulaire renverra
+// « Configuration manquante » plutôt que d'envoyer chez quelqu'un d'autre.
+const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL || '';
 
 // Code partagé avec le script (garde-fou anti-spam léger). Doit être IDENTIQUE
 // à la valeur SECRET dans google-apps-script.gs.
-const SECRET = 'akoun-rapha-2026-mer';
+const SECRET = 'chmouel-journo-2026-bm';
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 

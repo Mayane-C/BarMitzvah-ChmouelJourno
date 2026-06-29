@@ -76,7 +76,7 @@ export function Hero({
           )}
 
           {/* Nom du Bar Mitsva — wordmark image officiel + hébreu + nom */}
-          <p className="text-sky-deep/80 text-xs md:text-sm tracking-[0.55em] uppercase mt-6">
+          <p className="text-sky-deep/80 text-xs md:text-sm tracking-[0.32em] uppercase mt-6">
             Bar Mitsva
           </p>
           <img

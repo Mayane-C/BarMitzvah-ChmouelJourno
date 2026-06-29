@@ -125,31 +125,32 @@ function CurvedHebrew({
 }
 
 // Cascade : le conteneur orchestre l'apparition l'un après l'autre des éléments.
+// Durées allongées pour une révélation contemplative du faire-part.
 const container: Variants = {
   hidden: { opacity: 0, y: 24 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.6,
+      duration: 1.1,
       ease: [0.22, 1, 0.36, 1],
       when: 'beforeChildren',
-      staggerChildren: 0.13,
-      delayChildren: 0.12,
+      staggerChildren: 0.28,
+      delayChildren: 0.25,
     },
   },
 };
 const item: Variants = {
-  hidden: { opacity: 0, y: 18 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+  hidden: { opacity: 0, y: 22 },
+  visible: { opacity: 1, y: 0, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] } },
 };
 const itemName: Variants = {
-  hidden: { opacity: 0, y: 18, scale: 0.97 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } },
+  hidden: { opacity: 0, y: 22, scale: 0.96 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 1.5, ease: [0.22, 1, 0.36, 1] } },
 };
 const itemLine: Variants = {
   hidden: { scaleX: 0, opacity: 0 },
-  visible: { scaleX: 1, opacity: 1, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } },
+  visible: { scaleX: 1, opacity: 1, transition: { duration: 1.4, ease: [0.22, 1, 0.36, 1] } },
 };
 
 export function Announcement() {

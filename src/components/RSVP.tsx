@@ -33,9 +33,6 @@ export function RSVP({ includeChabbat }: { includeChabbat: boolean }) {
   };
 
   const n = (v: number | '') => Number(v) || 0;
-  const totalAdultes = n(data.soireeAdultes) + (includeChabbat ? n(data.chabbatAdultes) : 0);
-  const totalEnfants = n(data.soireeEnfants) + (includeChabbat ? n(data.chabbatEnfants) : 0);
-  const total = totalAdultes + totalEnfants;
 
   // « Ne pourront pas venir » = 0 adulte ET 0 enfant (coché automatiquement).
   const soireeAbsent = data.soireeAdultes === 0 && data.soireeEnfants === 0;
@@ -259,19 +256,6 @@ export function RSVP({ includeChabbat }: { includeChabbat: boolean }) {
               placeholder="Un petit mot, une bénédiction…"
               className={`${inputClasses} resize-none`}
             />
-          </div>
-
-          {/* Récap totaux */}
-          <div className="flex items-center justify-center gap-6 text-sm text-ink-soft">
-            <span>
-              Adultes : <strong className="text-sky-deep">{totalAdultes}</strong>
-            </span>
-            <span>
-              Enfants : <strong className="text-sky-deep">{totalEnfants}</strong>
-            </span>
-            <span>
-              Total : <strong className="text-sky-deep">{total}</strong>
-            </span>
           </div>
 
           {formState === 'error' && (

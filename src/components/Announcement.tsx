@@ -152,9 +152,19 @@ export function Announcement() {
   // au scroll — l'animation est synchronisée avec l'intro vidéo.
   const [revealed, setRevealed] = useState(false);
   useEffect(() => {
-    const onIntro = () => setRevealed(true);
+    // Délai après le clic « Découvrir » : on laisse les portes du 770
+    // commencer à s'ouvrir avant de faire monter le faire-part. Sur une
+    // intro de 4 s, on démarre à ~2.5 s — à ce stade les portes sont
+    // bien visiblement ouvertes.
+    let timer: number | undefined;
+    const onIntro = () => {
+      timer = window.setTimeout(() => setRevealed(true), 2500);
+    };
     window.addEventListener('ltd:play-intro', onIntro);
-    return () => window.removeEventListener('ltd:play-intro', onIntro);
+    return () => {
+      window.removeEventListener('ltd:play-intro', onIntro);
+      if (timer) clearTimeout(timer);
+    };
   }, []);
 
   return (

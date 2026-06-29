@@ -125,18 +125,19 @@ function CurvedHebrew({
 }
 
 // Cascade : le conteneur orchestre l'apparition l'un après l'autre des éléments.
-// Durées allongées pour une révélation contemplative du faire-part.
+// Durées allongées + remontée prononcée pour une révélation contemplative du
+// faire-part depuis le bas.
 const container: Variants = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: { opacity: 0, y: 90 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 1.1,
+      duration: 1.4,
       ease: [0.22, 1, 0.36, 1],
       when: 'beforeChildren',
       staggerChildren: 0.28,
-      delayChildren: 0.25,
+      delayChildren: 0.35,
     },
   },
 };
@@ -167,7 +168,7 @@ export function Announcement() {
         variants={container}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.25 }}
+        viewport={{ once: true, amount: 0.05, margin: '0px 0px -10% 0px' }}
       >
         {/* בס״ד (centré pour ne pas être masqué par l'arche) */}
         <motion.p variants={item} className="font-hebrew text-ink-soft/70 text-sm mb-3">
@@ -278,6 +279,35 @@ export function Announcement() {
             {a.pensee}
           </motion.p>
         )}
+      </motion.div>
+
+      {/* Indicateur « faites défiler » — apparaît en dessous du faire-part
+         pour signaler aux invités qu'il y a la suite à découvrir. */}
+      <motion.div
+        className="mt-10 md:mt-14 flex flex-col items-center gap-2 text-sun"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: false, amount: 0.5 }}
+        transition={{ duration: 0.8, delay: 0.3 }}
+      >
+        <span className="font-display italic text-ink-soft/80 text-sm md:text-base tracking-wide">
+          Faites défiler
+        </span>
+        <motion.svg
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+          animate={{ y: [0, 6, 0] }}
+          transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <path d="M6 9 L 12 15 L 18 9" />
+        </motion.svg>
       </motion.div>
     </section>
   );

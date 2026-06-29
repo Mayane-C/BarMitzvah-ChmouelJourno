@@ -23,7 +23,7 @@ export function ZoneBand({
   return (
     <section
       id={id}
-      className="relative scroll-mt-24 w-full bg-cream/90 backdrop-blur-md py-9 md:py-12 text-center"
+      className="relative scroll-mt-24 w-full bg-cream/85 backdrop-blur-md py-9 md:py-12 text-center"
       style={{
         borderTop: '6px double rgba(192, 142, 44, 0.75)',
         borderBottom: '6px double rgba(192, 142, 44, 0.75)',

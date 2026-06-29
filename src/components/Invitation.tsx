@@ -81,7 +81,7 @@ export function Invitation() {
         <ZoneBand
           id="paris"
           label="En France"
-          subtitle="En famille"
+          subtitle="Tous réunis"
         />
         {content.evenements.paris.map((e) => (
           <EventSection key={e.id} id={e.id} event={e} accent="sky" flag="fr" />

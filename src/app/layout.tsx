@@ -48,15 +48,12 @@ export const metadata: Metadata = {
     description: 'Dimanche 30 août 2026 — Vous êtes conviés à célébrer ce grand jour.',
     type: 'website',
     locale: 'fr_FR',
-    images: [
-      { url: '/og.jpg', width: 1200, height: 1200, alt: 'Bar Mitsva Chmouel Journo' },
-    ],
+    // Image OG générée dynamiquement par src/app/opengraph-image.tsx
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: 'Bar Mitsva Chmouel Journo',
     description: 'Dimanche 30 août 2026 — Vous êtes conviés à célébrer ce grand jour.',
-    images: ['/og.jpg'],
   },
 };
 

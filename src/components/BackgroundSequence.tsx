@@ -26,7 +26,7 @@ import { content } from '@/lib/content';
  * phases ET entre frames consécutives de la même vidéo.
  */
 
-type PhaseKind = 'debut-frozen' | 'debut-end' | 'debut-intro' | 'photo-1a' | 'photo-2' | 'photo-1b' | 'fin-scroll';
+type PhaseKind = 'debut-frozen' | 'debut-end' | 'debut-intro';
 
 interface PhaseBoundaries {
   heroEnd: number;
@@ -34,6 +34,7 @@ interface PhaseBoundaries {
   photo1aEnd: number;
   photo2End: number;
   photo1bEnd: number;
+  rsvpStart: number;
   finEnd: number;
 }
 
@@ -56,6 +57,7 @@ export function BackgroundSequence() {
   const layerARef = useRef<HTMLImageElement>(null);
   const layerBRef = useRef<HTMLImageElement>(null);
   const veilRef = useRef<HTMLDivElement>(null);
+  const heroOverlayRef = useRef<HTMLDivElement>(null);
   const phaseRef = useRef<PhaseKind>('debut-frozen');
   const introFrameRef = useRef(1); // index courant de l'intro auto
   const finFrameRef = useRef(1);   // index courant de la fin (scroll-tied)
@@ -85,23 +87,18 @@ export function BackgroundSequence() {
       const p1a = document.getElementById('chmouel-photo-1a');
       const p2 = document.getElementById('chmouel-photo-2');
       const p1b = document.getElementById('chmouel-photo-1b');
+      const rsvp = document.getElementById('rsvp');
       const main = document.querySelector('main');
-      if (!hero || !annonce || !p1a || !p2 || !p1b || !main) return;
-
-      const heroEnd = hero.offsetTop + hero.offsetHeight;
-      const annonceEnd = annonce.offsetTop + annonce.offsetHeight;
-      const photo1aEnd = p1a.offsetTop + p1a.offsetHeight;
-      const photo2End = p2.offsetTop + p2.offsetHeight;
-      const photo1bEnd = p1b.offsetTop + p1b.offsetHeight;
-      const finEnd = main.offsetTop + main.offsetHeight; // fin de page
+      if (!hero || !annonce || !p1a || !p2 || !p1b || !rsvp || !main) return;
 
       boundariesRef.current = {
-        heroEnd,
-        annonceEnd,
-        photo1aEnd,
-        photo2End,
-        photo1bEnd,
-        finEnd,
+        heroEnd: hero.offsetTop + hero.offsetHeight,
+        annonceEnd: annonce.offsetTop + annonce.offsetHeight,
+        photo1aEnd: p1a.offsetTop + p1a.offsetHeight,
+        photo2End: p2.offsetTop + p2.offsetHeight,
+        photo1bEnd: p1b.offsetTop + p1b.offsetHeight,
+        rsvpStart: rsvp.offsetTop,
+        finEnd: main.offsetTop + main.offsetHeight,
       };
     };
     recompute();
@@ -116,23 +113,27 @@ export function BackgroundSequence() {
     };
   }, []);
 
-  // ===== Animation auto de l'intro (frames 1 → 240) =====
+  // ===== Animation auto de l'intro (frames 1 → 240) + fade-out de
+  // l'overlay hero pour révéler le fond. =====
   useEffect(() => {
     const INTRO_DURATION_MS = 4000;
     const onPlayIntro = () => {
       phaseRef.current = 'debut-intro';
+      const overlay = heroOverlayRef.current;
       const start = performance.now();
       const animate = (now: number) => {
         const elapsed = now - start;
         const p = Math.min(elapsed / INTRO_DURATION_MS, 1);
-        // Easing : ease-out-cubic — lent en fin pour "atterrir" sur frame 240
         const eased = 1 - Math.pow(1 - p, 3);
         const idx = Math.max(1, Math.round(1 + eased * (DEBUT.count - 1)));
         introFrameRef.current = idx;
+        // Overlay : 1 → 0 sur la même courbe
+        if (overlay) overlay.style.opacity = String(1 - eased);
         if (p < 1) {
           requestAnimationFrame(animate);
         } else {
           phaseRef.current = 'debut-end';
+          if (overlay) overlay.style.display = 'none';
         }
       };
       requestAnimationFrame(animate);
@@ -154,34 +155,50 @@ export function BackgroundSequence() {
       const y = window.scrollY + window.innerHeight * 0.5; // point de référence : milieu du viewport
       const introPhase = phaseRef.current;
 
-      // ----- Phase hero / intro / annonce : debut frames -----
+      // Voile global : 0 partout (l'overlay du hero gère son propre voile à
+      // part). On laisse la photo / la frame s'exprimer sans filtre crème.
+      const NO_VEIL = 0;
+
+      // ----- Intro auto en cours -----
       if (introPhase === 'debut-intro') {
-        return { current: frameSrc(DEBUT, introFrameRef.current), veil: 0.4 };
+        return { current: frameSrc(DEBUT, introFrameRef.current), veil: NO_VEIL };
       }
 
       if (!b) {
-        return { current: frameSrc(DEBUT, 1), veil: 0.4 };
+        return { current: frameSrc(DEBUT, 1), veil: NO_VEIL };
       }
 
+      // ----- Hero : frame 1 figée, ou dernière frame si intro déjà jouée -----
       if (y < b.heroEnd) {
-        // Hero : si on n'a jamais joué l'intro, frame 1 ; sinon, dernière frame
         const idx = introPhase === 'debut-frozen' ? 1 : DEBUT.count;
-        return { current: frameSrc(DEBUT, idx), veil: 0.4 };
+        return { current: frameSrc(DEBUT, idx), veil: NO_VEIL };
       }
+      // ----- Annonce : dernière frame début (hall) -----
       if (y < b.annonceEnd) {
-        return { current: frameSrc(DEBUT, DEBUT.count), veil: 0.5 };
+        return { current: frameSrc(DEBUT, DEBUT.count), veil: NO_VEIL };
       }
-      // ----- Photos plein écran : voile au minimum (le boy doit ressortir) -----
-      if (y < b.photo1aEnd) return { current: PHOTO_1, veil: 0 };
-      if (y < b.photo2End) return { current: PHOTO_2, veil: 0 };
-      if (y < b.photo1bEnd) return { current: PHOTO_1, veil: 0 };
+      // ----- Mini viewports photo (pure révélation du boy) -----
+      if (y < b.photo1aEnd) return { current: PHOTO_1, veil: NO_VEIL };
+      if (y < b.photo2End) return { current: PHOTO_2, veil: NO_VEIL };
+      if (y < b.photo1bEnd) return { current: PHOTO_1, veil: NO_VEIL };
 
-      // ----- Fin video : scroll-tied entre photo1bEnd et finEnd -----
-      const total = Math.max(1, b.finEnd - b.photo1bEnd);
-      const progress = Math.min(1, Math.max(0, (y - b.photo1bEnd) / total));
+      // ----- Événements (NY puis France) : le boy reste visible derrière.
+      //       Photo 1 sur la 1re moitié, photo 2 sur la 2e moitié, retour photo 1 vers la fin.
+      if (y < b.rsvpStart) {
+        const start = b.photo1bEnd;
+        const total = Math.max(1, b.rsvpStart - start);
+        const p = (y - start) / total;
+        if (p < 0.33) return { current: PHOTO_1, veil: NO_VEIL };
+        if (p < 0.66) return { current: PHOTO_2, veil: NO_VEIL };
+        return { current: PHOTO_1, veil: NO_VEIL };
+      }
+
+      // ----- RSVP → footer : vidéo fin scroll-tied -----
+      const total = Math.max(1, b.finEnd - b.rsvpStart);
+      const progress = Math.min(1, Math.max(0, (y - b.rsvpStart) / total));
       const targetIdx = Math.max(1, Math.round(1 + progress * (FIN.count - 1)));
       finFrameRef.current += (targetIdx - finFrameRef.current) * 0.2;
-      return { current: frameSrc(FIN, Math.round(finFrameRef.current)), veil: 0.5 };
+      return { current: frameSrc(FIN, Math.round(finFrameRef.current)), veil: NO_VEIL };
     };
 
     let currentVeil = 0.4;
@@ -254,13 +271,25 @@ export function BackgroundSequence() {
         className="absolute inset-0"
         style={{ ...imgStyle, opacity: layerBOpacity }}
       />
-      {/* Voile crème dynamique — opacité ajustée par phase (cf. boucle tick).
-         0 sur les sections photo (image nette), ~0.4-0.5 sur les sections
-         avec texte (lisibilité). */}
+      {/* Voile crème dynamique — actuellement à 0 partout (les overlays
+          spécifiques sont gérés à part). Conservé pour usage futur. */}
       <div
         ref={veilRef}
         className="absolute inset-0 pointer-events-none bg-sand"
-        style={{ opacity: 0.4 }}
+        style={{ opacity: 0 }}
+      />
+      {/* Overlay du hero — actif avant le clic « Découvrir ». Voile crème
+          qui adoucit le fond du 770 et fait ressortir le vert royal des
+          écritures + l'or de la couronne. Fondu à 0 pendant l'intro. */}
+      <div
+        ref={heroOverlayRef}
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          opacity: 1,
+          background:
+            'linear-gradient(to bottom, rgba(246,241,230,0.78) 0%, rgba(246,241,230,0.62) 55%, rgba(246,241,230,0.80) 100%)',
+          transition: 'opacity 0.15s linear',
+        }}
       />
     </div>
   );

@@ -100,17 +100,21 @@ function ZoneHeader({
   subtitle?: string;
 }) {
   return (
-    <div id={id} className="px-6 pt-24 pb-6 text-center scroll-mt-24">
-      <div className="mx-auto mb-5 h-px w-44 md:w-56 bg-gradient-to-r from-transparent via-sun to-transparent" />
-      <h2 className="font-luxe font-normal text-xl md:text-2xl tracking-[0.42em] uppercase text-sky-deep">
-        {label}
-      </h2>
-      {subtitle && (
-        <p className="font-display italic text-ink-soft/80 text-base md:text-lg mt-3">
-          {subtitle}
-        </p>
-      )}
-      <div className="mx-auto mt-5 h-px w-44 md:w-56 bg-gradient-to-r from-transparent via-sun to-transparent" />
+    <div id={id} className="px-6 pt-20 pb-10 text-center scroll-mt-24">
+      {/* Panneau crème en backdrop pour faire ressortir le label sur le fond
+         photo. Ombrage doux + filet doré horizontal. */}
+      <div className="inline-block max-w-md mx-auto bg-cream/85 backdrop-blur-[2px] rounded-2xl shadow-md shadow-sky-deep/10 px-8 py-7 md:px-12 md:py-8">
+        <div className="mx-auto mb-4 h-px w-32 md:w-40 bg-gradient-to-r from-transparent via-sun to-transparent" />
+        <h2 className="font-luxe font-normal text-xl md:text-2xl tracking-[0.42em] uppercase text-sky-deep">
+          {label}
+        </h2>
+        {subtitle && (
+          <p className="font-display italic text-ink-soft/85 text-base md:text-lg mt-2">
+            {subtitle}
+          </p>
+        )}
+        <div className="mx-auto mt-4 h-px w-32 md:w-40 bg-gradient-to-r from-transparent via-sun to-transparent" />
+      </div>
     </div>
   );
 }
@@ -126,10 +130,10 @@ function ZoneSeparator() {
 }
 
 /**
- * Étage plein écran sans contenu — le fond (géré par BackgroundSequence)
- * occupe seul l'espace pendant ce viewport. Utilisé pour les 3 viewports
- * de photos Chmouel entre le faire-part et les blocs d'événements.
+ * Étage demi-écran sans contenu — révélation rapide du fond.
+ * Plus court qu'un viewport complet pour que l'utilisateur enchaîne
+ * naturellement vers le texte qui suit.
  */
 function ChmouelPhotoStage({ id }: { id: string }) {
-  return <section id={id} className="h-screen min-h-dvh" aria-hidden="true" />;
+  return <section id={id} className="h-[55vh] min-h-[55dvh]" aria-hidden="true" />;
 }

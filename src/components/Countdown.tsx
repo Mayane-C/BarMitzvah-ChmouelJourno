@@ -30,16 +30,7 @@ function Unit({ value, label }: { value: number; label: string }) {
         <AnimatePresence mode="popLayout">
           <motion.span
             key={display}
-            className="font-luxe text-5xl md:text-6xl leading-none tracking-[0.04em] tabular-nums"
-            style={{
-              backgroundImage:
-                'linear-gradient(180deg, #fff7e6 0%, #f6dca2 55%, #c08e2c 100%)',
-              WebkitBackgroundClip: 'text',
-              backgroundClip: 'text',
-              color: 'transparent',
-              WebkitTextFillColor: 'transparent',
-              textShadow: '0 1px 1px rgba(0,0,0,0.08)',
-            }}
+            className="font-luxe text-5xl md:text-6xl leading-none tracking-[0.04em] tabular-nums text-sky-deep"
             initial={{ y: '70%', opacity: 0 }}
             animate={{ y: '0%', opacity: 1 }}
             exit={{ y: '-70%', opacity: 0 }}
@@ -50,7 +41,7 @@ function Unit({ value, label }: { value: number; label: string }) {
           </motion.span>
         </AnimatePresence>
       </div>
-      <span className="mt-3 text-[10px] md:text-[11px] tracking-[0.42em] uppercase text-sky-deep font-luxe">
+      <span className="mt-3 text-[10px] md:text-[11px] tracking-[0.42em] uppercase text-sun font-luxe">
         {label}
       </span>
     </div>

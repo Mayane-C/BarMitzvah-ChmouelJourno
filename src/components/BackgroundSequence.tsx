@@ -209,7 +209,7 @@ export function BackgroundSequence() {
         crossfade = 0; // on va animer de 0 → 1
       }
       if (crossfade < 1) {
-        crossfade = Math.min(1, crossfade + 0.06); // ~17 frames pour finir = ~300ms
+        crossfade = Math.min(1, crossfade + 0.025); // ~40 frames = ~670ms (transition plus douce)
       }
 
       // Layer A = source précédente (ou identique si pas de transition en cours)
@@ -234,9 +234,18 @@ export function BackgroundSequence() {
         layerBRef.current?.setAttribute('src', bSrc);
         lastB = bSrc;
       }
-      // On ré-évalue le filtre à chaque tick (la condition dépend de
-      // phaseRef qui peut changer sans que le src ait changé).
-      if (layerARef.current) layerARef.current.style.filter = filterFor(aSrc);
+      // On ré-évalue le filtre à chaque tick. En plus, pendant une
+      // transition, la couche A (image sortante) est progressivement
+      // floutée → la photo qui disparaît part en flou doux, plus
+      // cinématique qu'un simple crossfade d'opacité.
+      const transitioning = crossfade < 1;
+      const outgoingBlurPx = transitioning ? crossfade * 14 : 0;
+      const baseA = filterFor(aSrc);
+      const filterA =
+        outgoingBlurPx > 0
+          ? (baseA === 'none' ? '' : baseA + ' ') + `blur(${outgoingBlurPx.toFixed(2)}px)`
+          : baseA;
+      if (layerARef.current) layerARef.current.style.filter = filterA;
       if (layerBRef.current) {
         layerBRef.current.style.filter = filterFor(bSrc);
         layerBRef.current.style.opacity = String(bOpacity);

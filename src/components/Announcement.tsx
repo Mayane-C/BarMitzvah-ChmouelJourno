@@ -281,14 +281,14 @@ export function Announcement() {
         )}
       </motion.div>
 
-      {/* Indicateur « faites défiler » — apparaît en dessous du faire-part
-         pour signaler aux invités qu'il y a la suite à découvrir. */}
+      {/* Indicateur « faites défiler » — apparaît une fois après que le
+         faire-part ait fini de se révéler, puis reste affiché. Non lié
+         au scroll. */}
       <motion.div
         className="mt-10 md:mt-14 flex flex-col items-center gap-2 text-sun"
         initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: false, amount: 0.5 }}
-        transition={{ duration: 0.8, delay: 0.3 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.2, delay: 2.5 }}
       >
         <span className="font-display italic text-ink-soft/80 text-sm md:text-base tracking-wide">
           Faites défiler

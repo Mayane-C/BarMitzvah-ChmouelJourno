@@ -218,12 +218,21 @@ export function BackgroundSequence() {
       const bSrc = targetSrcCurrent;
       const bOpacity = crossfade;
 
+      // Sépia + désaturation appliqués uniquement sur les frames du 770
+      // (bâtiment debut). La photo du boy et la vidéo fin restent intactes.
+      const filterFor = (src: string) =>
+        src.includes('/frames/debut/')
+          ? 'sepia(0.4) saturate(0.7) brightness(1.05)'
+          : 'none';
+
       if (aSrc !== lastA) {
         layerARef.current?.setAttribute('src', aSrc);
+        if (layerARef.current) layerARef.current.style.filter = filterFor(aSrc);
         lastA = aSrc;
       }
       if (bSrc !== lastB) {
         layerBRef.current?.setAttribute('src', bSrc);
+        if (layerBRef.current) layerBRef.current.style.filter = filterFor(bSrc);
         lastB = bSrc;
       }
       if (layerBRef.current) layerBRef.current.style.opacity = String(bOpacity);

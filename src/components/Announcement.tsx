@@ -125,17 +125,21 @@ function CurvedHebrew({
 }
 
 // Le bloc faire-part entier remonte d'un seul tenant depuis le bas du
-// viewport, façon « glissement de carte tirée du dessous ». Mouvement
-// très prononcé (~600 px) pour bien inciter au scroll.
+// viewport (~600 px), avec un ressort qui termine par un léger rebond
+// → entrée beaucoup plus dynamique qu'une simple courbe ease-out.
 const container: Variants = {
   hidden: { opacity: 0, y: 600 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 5.5,
-      ease: [0.22, 1, 0.36, 1],
-      opacity: { duration: 1.8, ease: 'easeOut' },
+      type: 'spring',
+      stiffness: 48,
+      damping: 13,
+      mass: 1.1,
+      // Opacité gérée à part — fade-in plus court pour que le contenu
+      // soit lisible tôt pendant que le ressort fait son travail.
+      opacity: { duration: 1.0, ease: 'easeOut' },
     },
   },
 };

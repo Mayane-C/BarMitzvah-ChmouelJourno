@@ -116,10 +116,10 @@ export function Header({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="md:hidden fixed inset-0 top-[64px] bg-sand/97 backdrop-blur-md"
+            className="md:hidden fixed inset-x-0 top-[64px] h-[calc(100vh-64px)] bg-sand/97 backdrop-blur-md flex items-center justify-center"
           >
             <motion.ul
-              className="flex flex-col items-center justify-center gap-8 h-full -mt-16"
+              className="flex flex-col items-center gap-8"
               initial="hidden"
               animate="show"
               variants={{

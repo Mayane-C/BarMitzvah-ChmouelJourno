@@ -40,7 +40,8 @@ export async function submitRSVP(
 
   const payload = {
     token: SECRET,
-    date: new Date().toLocaleString('fr-FR'),
+    // Date seule (sans l'heure) — c'est la date d'envoi du formulaire.
+    date: new Date().toLocaleDateString('fr-FR'),
     prenom: data.prenom,
     nom: data.nom,
     version: data.version,

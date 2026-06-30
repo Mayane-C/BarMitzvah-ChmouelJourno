@@ -166,7 +166,7 @@ function doPost(e) {
     var sheet = getDataSheet_(ss);
 
     var row = [
-      d.date || new Date().toLocaleString('fr-FR'),
+      d.date || new Date().toLocaleDateString('fr-FR'),
       d.prenom || '', d.nom || '',
       sAd, sEn, sAd + sEn, truthy(d.soireeAbsent),
       cAd, cEn, cAd + cEn, truthy(d.chabbatAbsent),
@@ -217,7 +217,6 @@ function updateSummary(ss) {
   sheet.clear();
   var rows = [
     ['RÉCAPITULATIF', ''],
-    ['Mis à jour le', new Date().toLocaleString('fr-FR')],
     ['', ''],
     ['LA SOIRÉE', ''],
     ['Adultes', sAd], ['Enfants', sEn], ['Total Soirée', sAd + sEn],
@@ -227,12 +226,12 @@ function updateSummary(ss) {
   ];
   sheet.getRange(1, 1, rows.length, 2).setValues(rows);
   sheet.getRange('A1:B1').merge().setFontSize(14).setFontWeight('bold').setFontColor(C_INK);
-  sheet.getRange('A4').setBackground(C_SOIREE).setFontColor('#ffffff').setFontWeight('bold');
-  sheet.getRange('B4').setBackground(C_SOIREE);
-  sheet.getRange('A9').setBackground(C_CHABBAT).setFontColor('#ffffff').setFontWeight('bold');
-  sheet.getRange('B9').setBackground(C_CHABBAT);
-  sheet.getRange('A7').setFontWeight('bold'); sheet.getRange('B7').setFontWeight('bold');
-  sheet.getRange('A12').setFontWeight('bold'); sheet.getRange('B12').setFontWeight('bold');
+  sheet.getRange('A3').setBackground(C_SOIREE).setFontColor('#ffffff').setFontWeight('bold');
+  sheet.getRange('B3').setBackground(C_SOIREE);
+  sheet.getRange('A8').setBackground(C_CHABBAT).setFontColor('#ffffff').setFontWeight('bold');
+  sheet.getRange('B8').setBackground(C_CHABBAT);
+  sheet.getRange('A6').setFontWeight('bold'); sheet.getRange('B6').setFontWeight('bold');
+  sheet.getRange('A11').setFontWeight('bold'); sheet.getRange('B11').setFontWeight('bold');
   sheet.setColumnWidth(1, 200); sheet.setColumnWidth(2, 130);
 }
 

@@ -51,8 +51,8 @@ export function Header({
   return (
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? 'bg-sand/90 backdrop-blur-md shadow-sm shadow-ink/5'
+        scrolled || open
+          ? 'bg-sand/95 backdrop-blur-md shadow-sm shadow-ink/5'
           : 'bg-transparent'
       }`}
     >
@@ -61,7 +61,7 @@ export function Header({
           href="#invitation"
           onClick={(e) => handleNav(e, '#invitation')}
           className={`font-display text-xl md:text-2xl tracking-wide transition-colors duration-500 ${
-            scrolled ? 'text-sky-deep' : 'text-cream'
+            scrolled || open ? 'text-sky-deep' : 'text-cream'
           }`}
         >
           {content.enfant.prenom} {content.enfant.nom}

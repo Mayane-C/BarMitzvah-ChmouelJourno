@@ -63,9 +63,6 @@ export function ScrollHint() {
       <div className="absolute left-3 md:left-8 top-1/2 -translate-y-1/2">
         <Arrow />
       </div>
-      <div className="absolute right-3 md:right-8 top-1/2 -translate-y-1/2">
-        <Arrow />
-      </div>
     </div>
   );
 }

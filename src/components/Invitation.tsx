@@ -9,6 +9,7 @@ import { RSVP } from '@/components/RSVP';
 import { Footer } from '@/components/Footer';
 import { BackgroundSequence } from '@/components/BackgroundSequence';
 import { ScrollHint } from '@/components/ScrollHint';
+import { PaginationDots } from '@/components/PaginationDots';
 import { ZoneBand } from '@/components/Bands';
 import { content } from '@/lib/content';
 
@@ -46,19 +47,36 @@ export function Invitation() {
     if (introState !== 'idle') return;
     setIntroState('playing');
     window.dispatchEvent(new Event('ltd:play-intro'));
-    // Scroll vers l'annonce dès le clic, en parallèle de l'ouverture
-    // des portes — l'invité voit le faire-part se révéler pendant la
-    // vidéo.
     requestAnimationFrame(() => {
       document.getElementById('annonce')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
     setTimeout(() => setIntroState('done'), 4000);
   };
 
+  /**
+   * Navigation via le menu hamburger ou la pagination d'ancrage —
+   * skip l'intro vidéo et révèle directement le contenu, puis scroll
+   * vers la section demandée. Pas de conflit avec l'auto-scroll de
+   * `discover` vers l'annonce.
+   */
+  const navigate = (id: string) => {
+    if (introState === 'idle') {
+      // L'annonce ne s'affichera pas si on ne déclenche pas l'événement.
+      setIntroState('done');
+      window.dispatchEvent(new Event('ltd:play-intro'));
+    }
+    document.body.style.overflow = '';
+    // Attendre la prochaine frame pour que le scroll lock soit bien levé
+    // avant le scrollIntoView.
+    requestAnimationFrame(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
+
   return (
     <>
       <BackgroundSequence />
-      <Header includeChabbat={false} onReveal={discover} />
+      <Header includeChabbat={false} onReveal={discover} onNavigate={navigate} />
       <main>
         <Hero onDiscover={discover} introState={introState} />
         <Announcement />
@@ -92,6 +110,7 @@ export function Invitation() {
       </main>
       <Footer />
       <ScrollHint />
+      <PaginationDots onNavigate={navigate} />
     </>
   );
 }

@@ -13,9 +13,11 @@ interface NavLink {
 export function Header({
   includeChabbat,
   onReveal,
+  onNavigate,
 }: {
   includeChabbat: boolean;
   onReveal?: () => void;
+  onNavigate?: (id: string) => void;
 }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -37,14 +39,20 @@ export function Header({
     { href: '#rsvp', label: 'Répondre' },
   ];
 
-  // Navigation par ancre : déverrouille le scroll (au cas où on n'a pas encore
-  // cliqué « Découvrir ») puis défile en douceur vers la section.
+  // Navigation par ancre. `onNavigate` skip l'intro vidéo en plus de
+  // scroller, donc on l'utilise quand on est encore au hero. Fallback
+  // sur `onReveal` + scrollIntoView pour la rétro-compat.
   const handleNav = (e: React.MouseEvent, href: string) => {
     e.preventDefault();
     setOpen(false);
+    const id = href.startsWith('#') ? href.slice(1) : href;
+    if (onNavigate) {
+      onNavigate(id);
+      return;
+    }
     document.body.style.overflow = '';
     onReveal?.();
-    const el = document.querySelector(href) as HTMLElement | null;
+    const el = document.getElementById(id);
     if (el) requestAnimationFrame(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }));
   };
 

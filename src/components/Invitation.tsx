@@ -9,7 +9,6 @@ import { RSVP } from '@/components/RSVP';
 import { Footer } from '@/components/Footer';
 import { BackgroundSequence } from '@/components/BackgroundSequence';
 import { ScrollHint } from '@/components/ScrollHint';
-import { PaginationDots } from '@/components/PaginationDots';
 import { ZoneBand } from '@/components/Bands';
 import { content } from '@/lib/content';
 
@@ -110,7 +109,6 @@ export function Invitation() {
       </main>
       <Footer />
       <ScrollHint />
-      <PaginationDots onNavigate={navigate} />
     </>
   );
 }

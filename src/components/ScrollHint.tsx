@@ -4,12 +4,34 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
 /**
- * Indicateur « Faites défiler » fixe au bas du viewport. N'est PAS dans
- * le flux du document — il ne scroll pas avec la page. Apparaît quand
- * le bas du faire-part atteint ~75 % de la hauteur du viewport (= le
- * même moment où la photo 1 entre en fond), reste affiché tant qu'on
- * est dans la zone photos, puis disparaît.
+ * Flèches « scrollez » fixes sur les côtés gauche et droit du viewport.
+ * Ne défilent jamais avec la page. Apparaissent dès que le bas du
+ * faire-part atteint le bas du viewport (signal qu'il y a la suite à
+ * découvrir), restent affichées pendant toute la zone photos puis
+ * disparaissent.
  */
+function Arrow() {
+  return (
+    <motion.svg
+      width="34"
+      height="34"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      animate={{ y: [0, 10, 0] }}
+      transition={{ duration: 1.7, repeat: Infinity, ease: 'easeInOut' }}
+      className="drop-shadow-[0_1px_3px_rgba(246,241,230,0.85)]"
+    >
+      <path d="M6 9 L 12 15 L 18 9" />
+      <path d="M6 4 L 12 10 L 18 4" opacity="0.55" />
+    </motion.svg>
+  );
+}
+
 export function ScrollHint() {
   const [visible, setVisible] = useState(false);
 
@@ -18,17 +40,13 @@ export function ScrollHint() {
       const annonce = document.getElementById('annonce');
       const p1b = document.getElementById('chmouel-photo-1b');
       if (!annonce) return;
-
-      // Apparition : bas du faire-part à 75 % du viewport → annonce
-      // bottom in viewport = 0.75 * vH.
       const sy = window.scrollY;
       const vH = window.innerHeight;
-      const annonceBottomInView = annonce.offsetTop + annonce.offsetHeight - sy;
-      const showAt = annonceBottomInView <= vH * 0.75;
-
+      // Apparition : le bas du faire-part est passé sous le bas du
+      // viewport (l'invité a bien vu le bloc en entier).
+      const showAt = sy > annonce.offsetTop + annonce.offsetHeight - vH;
       // Disparition : on est passé après la dernière photo.
       const hideAt = p1b ? sy > p1b.offsetTop + p1b.offsetHeight - vH * 0.5 : false;
-
       setVisible(showAt && !hideAt);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -38,30 +56,18 @@ export function ScrollHint() {
 
   return (
     <motion.div
-      className="fixed bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-sun z-30 pointer-events-none"
+      className="fixed inset-0 pointer-events-none z-30 text-sun"
       initial={{ opacity: 0 }}
       animate={{ opacity: visible ? 1 : 0 }}
       transition={{ duration: 0.6 }}
       aria-hidden={!visible}
     >
-      <span className="font-display italic text-ink-soft/85 text-sm md:text-base tracking-wide drop-shadow-[0_1px_2px_rgba(246,241,230,0.9)]">
-        Faites défiler
-      </span>
-      <motion.svg
-        width="22"
-        height="22"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-        animate={{ y: [0, 6, 0] }}
-        transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-      >
-        <path d="M6 9 L 12 15 L 18 9" />
-      </motion.svg>
+      <div className="absolute left-3 md:left-8 top-1/2 -translate-y-1/2">
+        <Arrow />
+      </div>
+      <div className="absolute right-3 md:right-8 top-1/2 -translate-y-1/2">
+        <Arrow />
+      </div>
     </motion.div>
   );
 }

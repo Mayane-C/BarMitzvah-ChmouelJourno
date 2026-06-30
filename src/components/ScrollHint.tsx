@@ -12,23 +12,26 @@ import { motion } from 'framer-motion';
  */
 function Arrow() {
   return (
-    <motion.svg
-      width="34"
-      height="34"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.4"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+    <motion.div
       aria-hidden="true"
-      animate={{ y: [0, 10, 0] }}
+      animate={{ y: [0, 12, 0] }}
       transition={{ duration: 1.7, repeat: Infinity, ease: 'easeInOut' }}
-      className="drop-shadow-[0_1px_3px_rgba(246,241,230,0.85)]"
+      className="flex items-center justify-center w-12 h-12 rounded-full bg-sky-deep/85 border border-sun/70 text-sun shadow-[0_6px_20px_rgba(28,77,44,0.45)] backdrop-blur-sm"
     >
-      <path d="M6 9 L 12 15 L 18 9" />
-      <path d="M6 4 L 12 10 L 18 4" opacity="0.55" />
-    </motion.svg>
+      <svg
+        width="26"
+        height="26"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M6 9 L 12 15 L 18 9" />
+        <path d="M6 4 L 12 10 L 18 4" opacity="0.6" />
+      </svg>
+    </motion.div>
   );
 }
 

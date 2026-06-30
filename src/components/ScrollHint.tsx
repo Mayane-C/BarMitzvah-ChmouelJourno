@@ -55,11 +55,9 @@ export function ScrollHint() {
   }, []);
 
   return (
-    <motion.div
-      className="fixed inset-0 pointer-events-none z-30 text-sun"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: visible ? 1 : 0 }}
-      transition={{ duration: 0.6 }}
+    <div
+      className="fixed inset-0 pointer-events-none z-30 text-sun transition-opacity duration-700"
+      style={{ opacity: visible ? 1 : 0 }}
       aria-hidden={!visible}
     >
       <div className="absolute left-3 md:left-8 top-1/2 -translate-y-1/2">
@@ -68,6 +66,6 @@ export function ScrollHint() {
       <div className="absolute right-3 md:right-8 top-1/2 -translate-y-1/2">
         <Arrow />
       </div>
-    </motion.div>
+    </div>
   );
 }

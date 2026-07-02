@@ -74,9 +74,9 @@ export const content = {
     paris: [
       {
         id: 'chabbat-ki-tavo',
-        titre: 'Kiddouch en l’honneur du Bar Mitsva\nChabbat matin',
+        titre: 'Kiddouch Bar Mitsva',
         icon: 'candles',
-        date: 'Du vendredi 28 au samedi 29 août 2026',
+        date: 'Samedi 29 août 2026 matin',
         heure: '',
         lieu: 'Salle des Fauvettes',
         adresse: '23 avenue des Fauvettes, 93360 Neuilly-Plaisance',

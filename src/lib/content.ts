@@ -61,16 +61,6 @@ export const content = {
         wazeUrl: '',
       },
       {
-        id: 'priere-770',
-        titre: 'Prière du matin au 770',
-        icon: '770',
-        date: 'Dimanche 23 août 2026',
-        heure: 'Matin',
-        lieu: '770 — Synagogue du Rabbi',
-        adresse: '770 Eastern Parkway, Brooklyn, NY 11213',
-        wazeUrl: '',
-      },
-      {
         id: 'montee-torah',
         titre: 'Montée à la Torah',
         icon: 'torah',
@@ -84,7 +74,7 @@ export const content = {
     paris: [
       {
         id: 'chabbat-ki-tavo',
-        titre: 'Chabbat Bar Mitsva\nParachat Ki Tavo',
+        titre: 'Kiddouch en l’honneur du Bar Mitsva\nChabbat matin',
         icon: 'candles',
         date: 'Du vendredi 28 au samedi 29 août 2026',
         heure: '',

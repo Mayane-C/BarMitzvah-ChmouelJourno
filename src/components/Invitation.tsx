@@ -33,38 +33,30 @@ export function Invitation() {
     window.scrollTo(0, 0);
   }, []);
 
-  // Après l'intro Découvrir, la page est posée sur le faire-part. Le
-  // premier geste de scroll de l'utilisateur déclenche un glissement
-  // automatique jusqu'à la photo 1 (le faire-part s'échappe vers le
-  // haut d'un mouvement continu). Les flèches ScrollHint prennent
-  // ensuite le relais pour la suite.
+  // Dès que « Découvrir » est cliqué, on arme un écouteur qui détecte
+  // le premier scroll utilisateur post-faire-part : la page glisse alors
+  // toute seule jusqu'à la photo 1, faisant sortir le bloc annonce du
+  // champ. Le handler ne se déclenche qu'une fois puis se retire.
   useEffect(() => {
-    if (introState !== 'done') return;
+    if (introState === 'idle') return;
 
-    const onFirstScroll = () => {
+    const onScroll = () => {
       if (autoScrolledToPhoto1Ref.current) return;
       const annonce = document.getElementById('annonce');
       const photo1 = document.getElementById('chmouel-photo-1a');
       if (!annonce || !photo1) return;
-      // On ne se déclenche que si l'utilisateur est autour du faire-part
-      // (arrivé via « Découvrir »), pas s'il vient d'ailleurs via le menu.
       const y = window.scrollY;
-      if (y < annonce.offsetTop - 200 || y > annonce.offsetTop + annonce.offsetHeight) return;
+      // On attend que l'utilisateur ait amorcé un scroll passé le
+      // faire-part (au moins 8px au-delà), et pas déjà atteint photo 1.
+      if (y <= annonce.offsetTop + 8) return;
+      if (y >= photo1.offsetTop - 8) return;
       autoScrolledToPhoto1Ref.current = true;
       photo1.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      window.removeEventListener('wheel', onFirstScroll);
-      window.removeEventListener('touchmove', onFirstScroll);
-      window.removeEventListener('keydown', onFirstScroll);
+      window.removeEventListener('scroll', onScroll);
     };
 
-    window.addEventListener('wheel', onFirstScroll, { passive: true });
-    window.addEventListener('touchmove', onFirstScroll, { passive: true });
-    window.addEventListener('keydown', onFirstScroll);
-    return () => {
-      window.removeEventListener('wheel', onFirstScroll);
-      window.removeEventListener('touchmove', onFirstScroll);
-      window.removeEventListener('keydown', onFirstScroll);
-    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, [introState]);
 
   useEffect(() => {

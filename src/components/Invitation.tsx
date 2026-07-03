@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Header } from '@/components/Header';
 import { Hero } from '@/components/Hero';
 import { Announcement } from '@/components/Announcement';
@@ -26,38 +26,11 @@ import { content } from '@/lib/content';
  */
 export function Invitation() {
   const [introState, setIntroState] = useState<'idle' | 'playing' | 'done'>('idle');
-  const autoScrolledToPhoto1Ref = useRef(false);
 
   useEffect(() => {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     window.scrollTo(0, 0);
   }, []);
-
-  // Dès que « Découvrir » est cliqué, on arme un écouteur qui détecte
-  // le premier scroll utilisateur post-faire-part : la page glisse alors
-  // toute seule jusqu'à la photo 1, faisant sortir le bloc annonce du
-  // champ. Le handler ne se déclenche qu'une fois puis se retire.
-  useEffect(() => {
-    if (introState === 'idle') return;
-
-    const onScroll = () => {
-      if (autoScrolledToPhoto1Ref.current) return;
-      const annonce = document.getElementById('annonce');
-      const photo1 = document.getElementById('chmouel-photo-1a');
-      if (!annonce || !photo1) return;
-      const y = window.scrollY;
-      // On attend que l'utilisateur ait amorcé un scroll passé le
-      // faire-part (au moins 8px au-delà), et pas déjà atteint photo 1.
-      if (y <= annonce.offsetTop + 8) return;
-      if (y >= photo1.offsetTop - 8) return;
-      autoScrolledToPhoto1Ref.current = true;
-      photo1.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      window.removeEventListener('scroll', onScroll);
-    };
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [introState]);
 
   useEffect(() => {
     // Verrouillé uniquement à l'idle ; dès qu'on clique « Découvrir »,

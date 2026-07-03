@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Header } from '@/components/Header';
 import { Hero } from '@/components/Hero';
 import { Announcement } from '@/components/Announcement';
@@ -26,11 +26,46 @@ import { content } from '@/lib/content';
  */
 export function Invitation() {
   const [introState, setIntroState] = useState<'idle' | 'playing' | 'done'>('idle');
+  const autoScrolledToPhoto1Ref = useRef(false);
 
   useEffect(() => {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     window.scrollTo(0, 0);
   }, []);
+
+  // Après l'intro Découvrir, la page est posée sur le faire-part. Le
+  // premier geste de scroll de l'utilisateur déclenche un glissement
+  // automatique jusqu'à la photo 1 (le faire-part s'échappe vers le
+  // haut d'un mouvement continu). Les flèches ScrollHint prennent
+  // ensuite le relais pour la suite.
+  useEffect(() => {
+    if (introState !== 'done') return;
+
+    const onFirstScroll = () => {
+      if (autoScrolledToPhoto1Ref.current) return;
+      const annonce = document.getElementById('annonce');
+      const photo1 = document.getElementById('chmouel-photo-1a');
+      if (!annonce || !photo1) return;
+      // On ne se déclenche que si l'utilisateur est autour du faire-part
+      // (arrivé via « Découvrir »), pas s'il vient d'ailleurs via le menu.
+      const y = window.scrollY;
+      if (y < annonce.offsetTop - 200 || y > annonce.offsetTop + annonce.offsetHeight) return;
+      autoScrolledToPhoto1Ref.current = true;
+      photo1.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.removeEventListener('wheel', onFirstScroll);
+      window.removeEventListener('touchmove', onFirstScroll);
+      window.removeEventListener('keydown', onFirstScroll);
+    };
+
+    window.addEventListener('wheel', onFirstScroll, { passive: true });
+    window.addEventListener('touchmove', onFirstScroll, { passive: true });
+    window.addEventListener('keydown', onFirstScroll);
+    return () => {
+      window.removeEventListener('wheel', onFirstScroll);
+      window.removeEventListener('touchmove', onFirstScroll);
+      window.removeEventListener('keydown', onFirstScroll);
+    };
+  }, [introState]);
 
   useEffect(() => {
     // Verrouillé uniquement à l'idle ; dès qu'on clique « Découvrir »,

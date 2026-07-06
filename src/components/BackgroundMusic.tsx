@@ -1,15 +1,20 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 
+export interface BackgroundMusicHandle {
+  play: () => void;
+}
+
 /**
- * Musique d'ambiance en boucle. Lecture déclenchée par l'événement
- * `ltd:play-intro` (clic « Découvrir ») pour respecter la politique
- * autoplay des navigateurs (geste utilisateur requis). Un petit bouton
- * fixe en bas à droite permet de couper le son à tout moment.
+ * Musique d'ambiance en boucle. La lecture est déclenchée par le parent
+ * via `ref.play()` appelé directement dans le handler du clic Découvrir
+ * (garantit que le play() est vu comme user-gesture immédiat par Safari).
+ * Un petit bouton pastille en bas à droite permet de couper à tout
+ * moment.
  */
-export function BackgroundMusic() {
+export const BackgroundMusic = forwardRef<BackgroundMusicHandle>(function BackgroundMusic(_, ref) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [muted, setMuted] = useState(false);
   const [started, setStarted] = useState(false);
@@ -19,23 +24,24 @@ export function BackgroundMusic() {
     if (!el) return;
     el.volume = 0.32;
     el.loop = true;
+  }, []);
 
-    const start = () => {
+  useImperativeHandle(ref, () => ({
+    play: () => {
+      const el = audioRef.current;
+      if (!el) return;
       el.play()
         .then(() => setStarted(true))
         .catch(() => {
-          // Autoplay refusé : on retentera au prochain geste utilisateur.
+          // Fallback : autoplay refusé, on retente au prochain geste.
           const retry = () => {
             el.play().then(() => setStarted(true)).catch(() => {});
-            window.removeEventListener('pointerdown', retry);
           };
           window.addEventListener('pointerdown', retry, { once: true });
+          window.addEventListener('touchstart', retry, { once: true });
         });
-    };
-
-    window.addEventListener('ltd:play-intro', start);
-    return () => window.removeEventListener('ltd:play-intro', start);
-  }, []);
+    },
+  }));
 
   const toggle = () => {
     const el = audioRef.current;
@@ -61,4 +67,4 @@ export function BackgroundMusic() {
       </button>
     </>
   );
-}
+});

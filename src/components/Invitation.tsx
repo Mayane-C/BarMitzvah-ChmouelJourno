@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Header } from '@/components/Header';
 import { Hero } from '@/components/Hero';
 import { Announcement } from '@/components/Announcement';
@@ -9,7 +9,7 @@ import { RSVP } from '@/components/RSVP';
 import { Footer } from '@/components/Footer';
 import { BackgroundSequence } from '@/components/BackgroundSequence';
 import { ScrollHint } from '@/components/ScrollHint';
-import { BackgroundMusic } from '@/components/BackgroundMusic';
+import { BackgroundMusic, type BackgroundMusicHandle } from '@/components/BackgroundMusic';
 import { ZoneBand } from '@/components/Bands';
 import { content } from '@/lib/content';
 
@@ -27,6 +27,7 @@ import { content } from '@/lib/content';
  */
 export function Invitation() {
   const [introState, setIntroState] = useState<'idle' | 'playing' | 'done'>('idle');
+  const musicRef = useRef<BackgroundMusicHandle | null>(null);
 
   useEffect(() => {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -43,23 +44,28 @@ export function Invitation() {
     };
   }, [introState]);
 
-  // Premier scroll après l'intro : dès que l'invité a commencé à
-  // scroller (10 px au-delà du sommet du faire-part), on reprend la
-  // main et on anime jusqu'à la photo 1. Le scrollTo par rAF override
-  // le scroll natif, y compris le momentum inertial iOS. Durée
-  // proportionnelle à la distance restante — plus l'invité a scrollé
-  // vite, plus il est proche, plus l'animation est courte.
+  // Premier scroll après l'intro : on mesure la vélocité de l'invité
+  // à partir des events scroll consécutifs, puis on anime jusqu'à la
+  // photo 1 EN CONTINUANT à cette même vitesse (easing linéaire).
+  // window.scrollTo par rAF override le scroll natif y compris le
+  // momentum inertial iOS.
   useEffect(() => {
     if (introState === 'idle') return;
     let taken = false;
     let rafId = 0;
+    let lastY = window.scrollY;
+    let lastT = performance.now();
+    let velocity = 0;
 
     const animateTo = (targetY: number, duration: number) => {
       const startY = window.scrollY;
       const startT = performance.now();
       const step = (now: number) => {
         const t = Math.min(1, (now - startT) / duration);
-        const eased = 1 - Math.pow(1 - t, 3);
+        // Décélération très douce sur les 15 % finaux uniquement, pour
+        // éviter le "clac" d'arrêt sec sans changer la sensation de
+        // vitesse constante sur les 85 % du trajet.
+        const eased = t < 0.85 ? t / 0.85 * 0.85 : 0.85 + (1 - Math.pow(1 - (t - 0.85) / 0.15, 2)) * 0.15;
         window.scrollTo(0, startY + (targetY - startY) * eased);
         if (t < 1) {
           rafId = requestAnimationFrame(step);
@@ -71,16 +77,26 @@ export function Invitation() {
     };
 
     const onScroll = () => {
+      const now = performance.now();
+      const y = window.scrollY;
+      const dt = Math.max(1, now - lastT);
+      // Vélocité en px/ms, moyennée avec la précédente (lissage).
+      velocity = ((y - lastY) / dt) * 0.7 + velocity * 0.3;
+      lastY = y;
+      lastT = now;
+
       if (taken) return;
       const annonce = document.getElementById('annonce');
       const photo1 = document.getElementById('chmouel-photo-1a');
       if (!annonce || !photo1) return;
-      const y = window.scrollY;
       if (y <= annonce.offsetTop + 10) return;
       if (y >= photo1.offsetTop - 10) return;
       taken = true;
       const distance = photo1.offsetTop - y;
-      const duration = Math.max(450, Math.min(1400, distance * 1.4));
+      // Vitesse plancher pour éviter les durées absurdes si l'invité
+      // scrolle très lentement, plafond pour éviter d'être trop bref.
+      const v = Math.min(1.8, Math.max(0.35, Math.abs(velocity)));
+      const duration = Math.max(600, Math.min(2400, distance / v));
       animateTo(photo1.offsetTop, duration);
     };
 
@@ -93,6 +109,9 @@ export function Invitation() {
 
   const discover = () => {
     if (introState !== 'idle') return;
+    // Musique : appel synchrone dans le handler du clic pour que Safari
+    // reconnaisse le user-gesture (le play doit démarrer immédiatement).
+    musicRef.current?.play();
     setIntroState('playing');
     window.dispatchEvent(new Event('ltd:play-intro'));
     requestAnimationFrame(() => {
@@ -158,7 +177,7 @@ export function Invitation() {
       </main>
       <Footer />
       <ScrollHint />
-      <BackgroundMusic />
+      <BackgroundMusic ref={musicRef} />
     </>
   );
 }

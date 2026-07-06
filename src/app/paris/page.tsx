@@ -1,9 +1,9 @@
 import { Invitation } from '@/components/Invitation';
 
 export const metadata = {
-  title: 'Bar Mitsva Chmouel — Neuilly-Plaisance',
+  title: 'Bar Mitsva Chmouel — Paris',
 };
 
-export default function NeuillyPlaisance() {
+export default function Paris() {
   return <Invitation variant="local" />;
 }

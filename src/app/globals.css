@@ -33,16 +33,6 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 5rem;
   background-color: var(--color-sand);
-  /* Snap uniquement quand on approche d'un point d'ancrage (proximity),
-     ce qui n'entrave pas le scroll libre partout ailleurs. Voir
-     #chmouel-photo-1a qui est le seul snap-target pour forcer l'arrêt
-     sur la photo 1 même quand l'invité scroll trop vite. */
-  scroll-snap-type: y proximity;
-}
-
-#chmouel-photo-1a {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
 
 body {

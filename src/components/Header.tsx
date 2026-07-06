@@ -14,10 +14,12 @@ export function Header({
   includeChabbat,
   onReveal,
   onNavigate,
+  variant = 'full',
 }: {
   includeChabbat: boolean;
   onReveal?: () => void;
   onNavigate?: (id: string) => void;
+  variant?: 'full' | 'local';
 }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -32,12 +34,20 @@ export function Header({
   // (le param `includeChabbat` n'est plus utilisé pour Chmouel mais reste dans
   // la signature pour compatibilité avec l'appelant)
   void includeChabbat;
-  const links: NavLink[] = [
-    { href: '#invitation', label: 'Invitation' },
-    { href: '#new-york', label: 'New York' },
-    { href: '#paris', label: 'France' },
-    { href: '#rsvp', label: 'Répondre' },
-  ];
+  const links: NavLink[] =
+    variant === 'local'
+      ? [
+          { href: '#invitation', label: 'Invitation' },
+          { href: '#chabbat-ki-tavo', label: 'Kiddouch' },
+          { href: '#soiree', label: 'Soirée' },
+          { href: '#rsvp', label: 'Répondre' },
+        ]
+      : [
+          { href: '#invitation', label: 'Invitation' },
+          { href: '#new-york', label: 'New York' },
+          { href: '#paris', label: 'France' },
+          { href: '#rsvp', label: 'Répondre' },
+        ];
 
   // Navigation par ancre. `onNavigate` skip l'intro vidéo en plus de
   // scroller, donc on l'utilise quand on est encore au hero. Fallback

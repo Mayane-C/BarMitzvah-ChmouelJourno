@@ -25,9 +25,10 @@ import { content } from '@/lib/content';
  *   3. À la fin de l'intro, le scroll est débloqué et la page glisse en
  *      douceur jusqu'au faire-part.
  */
-export function Invitation() {
+export function Invitation({ variant = 'full' }: { variant?: 'full' | 'local' } = {}) {
   const [introState, setIntroState] = useState<'idle' | 'playing' | 'done'>('idle');
   const musicRef = useRef<BackgroundMusicHandle | null>(null);
+  const isLocal = variant === 'local';
 
   useEffect(() => {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -80,7 +81,7 @@ export function Invitation() {
   return (
     <>
       <BackgroundSequence />
-      <Header includeChabbat={false} onReveal={discover} onNavigate={navigate} />
+      <Header includeChabbat={false} onReveal={discover} onNavigate={navigate} variant={variant} />
       <main>
         <Hero onDiscover={discover} introState={introState} />
         <Announcement />
@@ -92,20 +93,24 @@ export function Invitation() {
         <ChmouelPhotoStage id="chmouel-photo-2" h="30vh" />
         <ChmouelPhotoStage id="chmouel-photo-1b" h="20vh" />
 
-        <ZoneBand
-          id="new-york"
-          label="À New York"
-          subtitle="Chez le Rabbi"
-        />
-        {content.evenements.newYork.map((e) => (
-          <EventSection key={e.id} id={e.id} event={e} accent="sky" flag="us" />
-        ))}
+        {!isLocal && (
+          <>
+            <ZoneBand
+              id="new-york"
+              label="À New York"
+              subtitle="Chez le Rabbi"
+            />
+            {content.evenements.newYork.map((e) => (
+              <EventSection key={e.id} id={e.id} event={e} accent="sky" flag="us" />
+            ))}
 
-        <ZoneBand
-          id="paris"
-          label="En France"
-          subtitle="Tous réunis"
-        />
+            <ZoneBand
+              id="paris"
+              label="En France"
+              subtitle="Tous réunis"
+            />
+          </>
+        )}
         {content.evenements.paris.map((e) => (
           <EventSection key={e.id} id={e.id} event={e} accent="sky" flag="fr" />
         ))}

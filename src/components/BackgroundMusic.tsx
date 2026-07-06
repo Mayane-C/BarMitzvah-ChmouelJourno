@@ -32,13 +32,13 @@ export const BackgroundMusic = forwardRef<BackgroundMusicHandle>(function Backgr
       if (!el) return;
       // Skip la 1ʳᵉ seconde de silence/introduction : on entre direct
       // sur la mélodie.
-      try { el.currentTime = 2; } catch {}
+      try { el.currentTime = 1.8; } catch {}
       el.play()
         .then(() => setStarted(true))
         .catch(() => {
           // Fallback : autoplay refusé, on retente au prochain geste.
           const retry = () => {
-            try { el.currentTime = 2; } catch {}
+            try { el.currentTime = 1.8; } catch {}
             el.play().then(() => setStarted(true)).catch(() => {});
           };
           window.addEventListener('pointerdown', retry, { once: true });

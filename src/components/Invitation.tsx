@@ -43,15 +43,15 @@ export function Invitation() {
     };
   }, [introState]);
 
-  // Premier scroll après l'intro : on capture la vélocité du geste
-  // utilisateur et on anime la page en JS jusqu'à la photo 1. Durée =
-  // distance / vitesse (bornée), pour que le glissement s'adapte à
-  // l'intensité du scroll. Une seule fois, puis on relâche.
+  // Premier scroll après l'intro : dès que l'invité a commencé à
+  // scroller (10 px au-delà du sommet du faire-part), on reprend la
+  // main et on anime jusqu'à la photo 1. Le scrollTo par rAF override
+  // le scroll natif, y compris le momentum inertial iOS. Durée
+  // proportionnelle à la distance restante — plus l'invité a scrollé
+  // vite, plus il est proche, plus l'animation est courte.
   useEffect(() => {
     if (introState === 'idle') return;
     let taken = false;
-    let touchStartY = 0;
-    let touchStartT = 0;
     let rafId = 0;
 
     const animateTo = (targetY: number, duration: number) => {
@@ -61,53 +61,32 @@ export function Invitation() {
         const t = Math.min(1, (now - startT) / duration);
         const eased = 1 - Math.pow(1 - t, 3);
         window.scrollTo(0, startY + (targetY - startY) * eased);
-        if (t < 1) rafId = requestAnimationFrame(step);
+        if (t < 1) {
+          rafId = requestAnimationFrame(step);
+        } else {
+          window.scrollTo(0, targetY);
+        }
       };
       rafId = requestAnimationFrame(step);
     };
 
-    const trigger = (velocityPxPerMs: number) => {
+    const onScroll = () => {
+      if (taken) return;
       const annonce = document.getElementById('annonce');
       const photo1 = document.getElementById('chmouel-photo-1a');
-      if (!annonce || !photo1) return false;
+      if (!annonce || !photo1) return;
       const y = window.scrollY;
-      // Ne se déclenche que si on est sur (ou juste sous) le faire-part.
-      if (y < annonce.offsetTop - 40 || y > annonce.offsetTop + 60) return false;
+      if (y <= annonce.offsetTop + 10) return;
+      if (y >= photo1.offsetTop - 10) return;
       taken = true;
-      const distance = Math.max(1, photo1.offsetTop - y);
-      // Vitesse bornée pour rester lisible.
-      const v = Math.min(1.4, Math.max(0.35, velocityPxPerMs));
-      const duration = Math.max(650, Math.min(2200, distance / v));
+      const distance = photo1.offsetTop - y;
+      const duration = Math.max(450, Math.min(1400, distance * 1.4));
       animateTo(photo1.offsetTop, duration);
-      return true;
     };
 
-    const onWheel = (e: WheelEvent) => {
-      if (taken || e.deltaY <= 0) return;
-      // Vitesse approx : 100 px de delta = molette lente, 300+ = rapide.
-      if (trigger(Math.abs(e.deltaY) / 200)) e.preventDefault();
-    };
-
-    const onTouchStart = (e: TouchEvent) => {
-      touchStartY = e.touches[0].clientY;
-      touchStartT = performance.now();
-    };
-    const onTouchMove = (e: TouchEvent) => {
-      if (taken) return;
-      const dy = touchStartY - e.touches[0].clientY;
-      if (dy < 12) return; // attendre un swipe up significatif
-      const dt = Math.max(1, performance.now() - touchStartT);
-      if (trigger(dy / dt)) e.preventDefault();
-    };
-
-    window.addEventListener('wheel', onWheel, { passive: false });
-    window.addEventListener('touchstart', onTouchStart, { passive: true });
-    window.addEventListener('touchmove', onTouchMove, { passive: false });
-
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => {
-      window.removeEventListener('wheel', onWheel);
-      window.removeEventListener('touchstart', onTouchStart);
-      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('scroll', onScroll);
       if (rafId) cancelAnimationFrame(rafId);
     };
   }, [introState]);

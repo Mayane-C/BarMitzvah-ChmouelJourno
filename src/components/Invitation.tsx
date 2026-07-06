@@ -42,6 +42,75 @@ export function Invitation() {
     };
   }, [introState]);
 
+  // Premier scroll après l'intro : on capture la vélocité du geste
+  // utilisateur et on anime la page en JS jusqu'à la photo 1. Durée =
+  // distance / vitesse (bornée), pour que le glissement s'adapte à
+  // l'intensité du scroll. Une seule fois, puis on relâche.
+  useEffect(() => {
+    if (introState === 'idle') return;
+    let taken = false;
+    let touchStartY = 0;
+    let touchStartT = 0;
+    let rafId = 0;
+
+    const animateTo = (targetY: number, duration: number) => {
+      const startY = window.scrollY;
+      const startT = performance.now();
+      const step = (now: number) => {
+        const t = Math.min(1, (now - startT) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        window.scrollTo(0, startY + (targetY - startY) * eased);
+        if (t < 1) rafId = requestAnimationFrame(step);
+      };
+      rafId = requestAnimationFrame(step);
+    };
+
+    const trigger = (velocityPxPerMs: number) => {
+      const annonce = document.getElementById('annonce');
+      const photo1 = document.getElementById('chmouel-photo-1a');
+      if (!annonce || !photo1) return false;
+      const y = window.scrollY;
+      // Ne se déclenche que si on est sur (ou juste sous) le faire-part.
+      if (y < annonce.offsetTop - 40 || y > annonce.offsetTop + 60) return false;
+      taken = true;
+      const distance = Math.max(1, photo1.offsetTop - y);
+      // Vitesse bornée pour rester lisible.
+      const v = Math.min(1.4, Math.max(0.35, velocityPxPerMs));
+      const duration = Math.max(650, Math.min(2200, distance / v));
+      animateTo(photo1.offsetTop, duration);
+      return true;
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      if (taken || e.deltaY <= 0) return;
+      // Vitesse approx : 100 px de delta = molette lente, 300+ = rapide.
+      if (trigger(Math.abs(e.deltaY) / 200)) e.preventDefault();
+    };
+
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+      touchStartT = performance.now();
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (taken) return;
+      const dy = touchStartY - e.touches[0].clientY;
+      if (dy < 12) return; // attendre un swipe up significatif
+      const dt = Math.max(1, performance.now() - touchStartT);
+      if (trigger(dy / dt)) e.preventDefault();
+    };
+
+    window.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: false });
+
+    return () => {
+      window.removeEventListener('wheel', onWheel);
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove', onTouchMove);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [introState]);
+
   const discover = () => {
     if (introState !== 'idle') return;
     setIntroState('playing');

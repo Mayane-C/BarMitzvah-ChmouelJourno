@@ -112,7 +112,13 @@ export function Invitation({ variant = 'full' }: { variant?: 'full' | 'local' } 
           </>
         )}
         {content.evenements.paris.map((e) => (
-          <EventSection key={e.id} id={e.id} event={e} accent="sky" flag="fr" />
+          <EventSection
+            key={e.id}
+            id={e.id}
+            event={e}
+            accent="sky"
+            flag={isLocal ? undefined : 'fr'}
+          />
         ))}
 
         <RSVP includeChabbat={true} />

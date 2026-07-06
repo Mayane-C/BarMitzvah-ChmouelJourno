@@ -44,69 +44,6 @@ export function Invitation() {
     };
   }, [introState]);
 
-  // Premier scroll après l'intro : on mesure la vélocité de l'invité
-  // à partir des events scroll consécutifs, puis on anime jusqu'à la
-  // photo 1 EN CONTINUANT à cette même vitesse (easing linéaire).
-  // window.scrollTo par rAF override le scroll natif y compris le
-  // momentum inertial iOS.
-  useEffect(() => {
-    if (introState === 'idle') return;
-    let taken = false;
-    let rafId = 0;
-    let lastY = window.scrollY;
-    let lastT = performance.now();
-    let velocity = 0;
-
-    const animateTo = (targetY: number, duration: number) => {
-      const startY = window.scrollY;
-      const startT = performance.now();
-      const step = (now: number) => {
-        const t = Math.min(1, (now - startT) / duration);
-        // Décélération très douce sur les 15 % finaux uniquement, pour
-        // éviter le "clac" d'arrêt sec sans changer la sensation de
-        // vitesse constante sur les 85 % du trajet.
-        const eased = t < 0.85 ? t / 0.85 * 0.85 : 0.85 + (1 - Math.pow(1 - (t - 0.85) / 0.15, 2)) * 0.15;
-        window.scrollTo(0, startY + (targetY - startY) * eased);
-        if (t < 1) {
-          rafId = requestAnimationFrame(step);
-        } else {
-          window.scrollTo(0, targetY);
-        }
-      };
-      rafId = requestAnimationFrame(step);
-    };
-
-    const onScroll = () => {
-      const now = performance.now();
-      const y = window.scrollY;
-      const dt = Math.max(1, now - lastT);
-      // Vélocité en px/ms, moyennée avec la précédente (lissage).
-      velocity = ((y - lastY) / dt) * 0.7 + velocity * 0.3;
-      lastY = y;
-      lastT = now;
-
-      if (taken) return;
-      const annonce = document.getElementById('annonce');
-      const photo1 = document.getElementById('chmouel-photo-1a');
-      if (!annonce || !photo1) return;
-      if (y <= annonce.offsetTop + 10) return;
-      if (y >= photo1.offsetTop - 10) return;
-      taken = true;
-      const distance = photo1.offsetTop - y;
-      // Vitesse plancher pour éviter les durées absurdes si l'invité
-      // scrolle très lentement, plafond pour éviter d'être trop bref.
-      const v = Math.min(1.8, Math.max(0.35, Math.abs(velocity)));
-      const duration = Math.max(600, Math.min(2400, distance / v));
-      animateTo(photo1.offsetTop, duration);
-    };
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      if (rafId) cancelAnimationFrame(rafId);
-    };
-  }, [introState]);
-
   const discover = () => {
     if (introState !== 'idle') return;
     // Musique : appel synchrone dans le handler du clic pour que Safari

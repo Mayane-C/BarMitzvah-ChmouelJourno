@@ -17,6 +17,7 @@ export interface RSVPFormData {
 // À remplir dans .env.local + dans les env vars Vercel.
 // Pas de fallback : si l'URL n'est pas configurée, le formulaire renverra
 // « Configuration manquante » plutôt que d'envoyer chez quelqu'un d'autre.
+// v2 — bust build cache pour reprendre la nouvelle URL post-Sheet upgrade.
 const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL || '';
 
 // Code partagé avec le script (garde-fou anti-spam léger). Doit être IDENTIQUE

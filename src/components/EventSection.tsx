@@ -237,12 +237,15 @@ export function EventSection({
   event,
   accent,
   flag,
+  size = 'default',
 }: {
   id: string;
   event: EventData;
   accent: 'sky' | 'sage';
   flag?: 'us' | 'fr';
+  size?: 'default' | 'large';
 }) {
+  const isLarge = size === 'large';
   const waze =
     event.wazeUrl ||
     (event.lieu
@@ -265,9 +268,13 @@ export function EventSection({
   ];
 
   return (
-    <section id={id} className="relative py-20 md:py-28 px-6">
+    <section id={id} className={`relative px-6 ${isLarge ? 'py-24 md:py-40' : 'py-20 md:py-28'}`}>
       <motion.div
-        className={`relative max-w-xl mx-auto bg-cream/85 rounded-3xl border-t-2 ${accentBorder} shadow-lg shadow-sky-deep/5 px-8 py-10 md:px-12 md:py-12 text-center`}
+        className={`relative ${
+          isLarge ? 'max-w-3xl' : 'max-w-xl'
+        } mx-auto bg-cream/85 rounded-3xl border-t-2 ${accentBorder} shadow-lg shadow-sky-deep/5 ${
+          isLarge ? 'px-10 py-14 md:px-20 md:py-20' : 'px-8 py-10 md:px-12 md:py-12'
+        } text-center`}
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}

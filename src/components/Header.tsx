@@ -19,7 +19,7 @@ export function Header({
   includeChabbat: boolean;
   onReveal?: () => void;
   onNavigate?: (id: string) => void;
-  variant?: 'full' | 'local';
+  variant?: 'full' | 'local' | 'soiree';
 }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -35,7 +35,13 @@ export function Header({
   // la signature pour compatibilité avec l'appelant)
   void includeChabbat;
   const links: NavLink[] =
-    variant === 'local'
+    variant === 'soiree'
+      ? [
+          { href: '#invitation', label: 'Invitation' },
+          { href: '#soiree', label: 'Soirée' },
+          { href: '#rsvp', label: 'Répondre' },
+        ]
+      : variant === 'local'
       ? [
           { href: '#invitation', label: 'Invitation' },
           { href: '#chabbat-ki-tavo', label: 'Kiddouch' },

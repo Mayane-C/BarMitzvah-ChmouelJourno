@@ -25,10 +25,14 @@ import { content } from '@/lib/content';
  *   3. À la fin de l'intro, le scroll est débloqué et la page glisse en
  *      douceur jusqu'au faire-part.
  */
-export function Invitation({ variant = 'full' }: { variant?: 'full' | 'local' } = {}) {
+export function Invitation({ variant = 'full' }: { variant?: 'full' | 'local' | 'soiree' } = {}) {
   const [introState, setIntroState] = useState<'idle' | 'playing' | 'done'>('idle');
   const musicRef = useRef<BackgroundMusicHandle | null>(null);
-  const isLocal = variant === 'local';
+  const isLocal = variant === 'local' || variant === 'soiree';
+  const isSoireeOnly = variant === 'soiree';
+  const parisEvents = isSoireeOnly
+    ? content.evenements.paris.filter((e) => e.id === 'soiree')
+    : content.evenements.paris;
 
   useEffect(() => {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -81,7 +85,12 @@ export function Invitation({ variant = 'full' }: { variant?: 'full' | 'local' } 
   return (
     <>
       <BackgroundSequence />
-      <Header includeChabbat={false} onReveal={discover} onNavigate={navigate} variant={variant} />
+      <Header
+        includeChabbat={false}
+        onReveal={discover}
+        onNavigate={navigate}
+        variant={variant}
+      />
       <main>
         <Hero onDiscover={discover} introState={introState} />
         <Announcement />
@@ -111,13 +120,14 @@ export function Invitation({ variant = 'full' }: { variant?: 'full' | 'local' } 
             />
           </>
         )}
-        {content.evenements.paris.map((e) => (
+        {parisEvents.map((e) => (
           <EventSection
             key={e.id}
             id={e.id}
             event={e}
             accent="sky"
             flag={isLocal ? undefined : 'fr'}
+            size={isSoireeOnly ? 'large' : 'default'}
           />
         ))}
 

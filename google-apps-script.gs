@@ -49,7 +49,7 @@ function applyCheckboxes_(sheet, nRows) {
 /** En-tête (2 lignes) — sans toucher aux données. */
 function buildHeader_(sheet) {
   sheet.setFrozenRows(0);
-  var hdr = sheet.getRange(1, 1, 2, 12);
+  var hdr = sheet.getRange(1, 1, 2, 13);
   hdr.breakApart();
   hdr.clearContent();
   hdr.clearFormat();
@@ -60,6 +60,7 @@ function buildHeader_(sheet) {
   sheet.getRange('D1:G1').merge().setValue('LA SOIRÉE');
   sheet.getRange('H1:K1').merge().setValue('LE CHABBAT');
   sheet.getRange('L1:L2').merge().setValue('Message pour Chmouel');
+  sheet.getRange('M1:M2').merge().setValue('Invitation');
 
   sheet.getRange('D2').setValue('Adultes');
   sheet.getRange('E2').setValue('Enfants');
@@ -70,12 +71,13 @@ function buildHeader_(sheet) {
   sheet.getRange('J2').setValue('Total');
   sheet.getRange('K2').setValue('Pas présent');
 
-  var header = sheet.getRange(1, 1, 2, 12);
+  var header = sheet.getRange(1, 1, 2, 13);
   header.setFontWeight('bold').setVerticalAlignment('middle').setHorizontalAlignment('center')
         .setBorder(true, true, true, true, true, true, C_BORDER, SpreadsheetApp.BorderStyle.SOLID);
 
   sheet.getRange('A1:C2').setBackground(C_SAND).setFontColor(C_INK);
   sheet.getRange('L1:L2').setBackground(C_SAND).setFontColor(C_INK);
+  sheet.getRange('M1:M2').setBackground(C_SAND).setFontColor(C_INK);
   sheet.getRange('D1:G1').setBackground(C_SOIREE).setFontColor('#ffffff').setFontSize(11);
   sheet.getRange('H1:K1').setBackground(C_CHABBAT).setFontColor('#ffffff').setFontSize(11);
   sheet.getRange('D2:G2').setBackground(C_SOIREE_LIGHT).setFontColor(C_INK);
@@ -86,6 +88,7 @@ function buildHeader_(sheet) {
   sheet.setColumnWidth(4, 78); sheet.setColumnWidth(5, 78); sheet.setColumnWidth(6, 78); sheet.setColumnWidth(7, 95);
   sheet.setColumnWidth(8, 78); sheet.setColumnWidth(9, 78); sheet.setColumnWidth(10, 78); sheet.setColumnWidth(11, 95);
   sheet.setColumnWidth(12, 300);
+  sheet.setColumnWidth(13, 150);
 }
 
 /**
@@ -99,13 +102,18 @@ function repair() {
   if (!sh) { sh = ss.getSheets()[0]; sh.setName('Réponses'); }
 
   var lastRow = sh.getLastRow();
+  var lastCol = Math.max(12, sh.getLastColumn());
   var data = [];
   if (lastRow >= 3) {
-    var vals = sh.getRange(3, 1, lastRow - 2, 12).getValues();
+    var vals = sh.getRange(3, 1, lastRow - 2, lastCol).getValues();
     for (var i = 0; i < vals.length; i++) {
       // garde seulement les vraies lignes (un prénom OU un nom)
       if (String(vals[i][1]).trim() !== '' || String(vals[i][2]).trim() !== '') {
-        data.push(vals[i]);
+        // Normalise à 13 colonnes (padding si l'ancien layout n'avait pas la col M).
+        var padded = vals[i].slice(0, 13);
+        while (padded.length < 13) padded.push('');
+        if (!padded[12]) padded[12] = 'Complète'; // par défaut sur les anciennes lignes
+        data.push(padded);
       }
     }
   }
@@ -113,7 +121,7 @@ function repair() {
   // Nettoie TOUT sous l'en-tête (contenu + validations qui gonflaient).
   var maxR = sh.getMaxRows();
   if (maxR >= 3) {
-    var body = sh.getRange(3, 1, maxR - 2, 12);
+    var body = sh.getRange(3, 1, maxR - 2, 13);
     body.clearDataValidations();
     body.clearContent();
     body.setFontWeight('normal');
@@ -121,9 +129,10 @@ function repair() {
 
   // Réécrit les données propres en haut.
   if (data.length) {
-    sh.getRange(3, 1, data.length, 12).setValues(data);
+    sh.getRange(3, 1, data.length, 13).setValues(data);
     sh.getRange(3, 4, data.length, 3).setHorizontalAlignment('center');
     sh.getRange(3, 8, data.length, 3).setHorizontalAlignment('center');
+    sh.getRange(3, 13, data.length, 1).setHorizontalAlignment('center');
     sh.getRange(3, 6, data.length, 1).setFontWeight('bold');
     sh.getRange(3, 10, data.length, 1).setFontWeight('bold');
     applyCheckboxes_(sh, data.length);
@@ -165,18 +174,22 @@ function doPost(e) {
     var ss = getSpreadsheet_();
     var sheet = getDataSheet_(ss);
 
+    var invitationLabel = String(d.version) === 'soiree' ? 'Soirée uniquement' : 'Complète';
+
     var row = [
       d.date || new Date().toLocaleDateString('fr-FR'),
       d.prenom || '', d.nom || '',
       sAd, sEn, sAd + sEn, truthy(d.soireeAbsent),
       cAd, cEn, cAd + cEn, truthy(d.chabbatAbsent),
-      d.message || ''
+      d.message || '',
+      invitationLabel
     ];
 
     sheet.appendRow(row);
     var r = sheet.getLastRow();
     sheet.getRange(r, 4, 1, 3).setHorizontalAlignment('center');
     sheet.getRange(r, 8, 1, 3).setHorizontalAlignment('center');
+    sheet.getRange(r, 13).setHorizontalAlignment('center');
     sheet.getRange(r, 6).setFontWeight('bold');
     sheet.getRange(r, 10).setFontWeight('bold');
     // Cases à cocher SUR CETTE LIGNE uniquement (pas de gonflage).
@@ -203,13 +216,16 @@ function updateSummary(ss) {
   if (!data) return;
   var last = data.getLastRow();
   var sAd = 0, sEn = 0, cAd = 0, cEn = 0;
+  var nCompletes = 0, nSoireeOnly = 0;
   if (last >= 3) {
-    var vals = data.getRange(3, 1, last - 2, 12).getValues();
+    var vals = data.getRange(3, 1, last - 2, 13).getValues();
     for (var i = 0; i < vals.length; i++) {
       sAd += Number(vals[i][3]) || 0;
       sEn += Number(vals[i][4]) || 0;
       cAd += Number(vals[i][7]) || 0;
       cEn += Number(vals[i][8]) || 0;
+      if (String(vals[i][12]) === 'Soirée uniquement') nSoireeOnly++;
+      else if (String(vals[i][1]).trim() !== '' || String(vals[i][2]).trim() !== '') nCompletes++;
     }
   }
   var sheet = ss.getSheetByName('Récapitulatif');
@@ -222,7 +238,12 @@ function updateSummary(ss) {
     ['Adultes', sAd], ['Enfants', sEn], ['Total Soirée', sAd + sEn],
     ['', ''],
     ['LE CHABBAT', ''],
-    ['Adultes', cAd], ['Enfants', cEn], ['Total Chabbat', cAd + cEn]
+    ['Adultes', cAd], ['Enfants', cEn], ['Total Chabbat', cAd + cEn],
+    ['', ''],
+    ['RÉPONSES', ''],
+    ['Invitations complètes', nCompletes],
+    ['Invitations soirée uniquement', nSoireeOnly],
+    ['Total familles', nCompletes + nSoireeOnly]
   ];
   sheet.getRange(1, 1, rows.length, 2).setValues(rows);
   sheet.getRange('A1:B1').merge().setFontSize(14).setFontWeight('bold').setFontColor(C_INK);
@@ -230,9 +251,12 @@ function updateSummary(ss) {
   sheet.getRange('B3').setBackground(C_SOIREE);
   sheet.getRange('A8').setBackground(C_CHABBAT).setFontColor('#ffffff').setFontWeight('bold');
   sheet.getRange('B8').setBackground(C_CHABBAT);
+  sheet.getRange('A13').setBackground(C_SAND).setFontColor(C_INK).setFontWeight('bold');
+  sheet.getRange('B13').setBackground(C_SAND);
   sheet.getRange('A6').setFontWeight('bold'); sheet.getRange('B6').setFontWeight('bold');
   sheet.getRange('A11').setFontWeight('bold'); sheet.getRange('B11').setFontWeight('bold');
-  sheet.setColumnWidth(1, 200); sheet.setColumnWidth(2, 130);
+  sheet.getRange('A16').setFontWeight('bold'); sheet.getRange('B16').setFontWeight('bold');
+  sheet.setColumnWidth(1, 220); sheet.setColumnWidth(2, 130);
 }
 
 function setup() {

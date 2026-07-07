@@ -131,7 +131,7 @@ export function Invitation({ variant = 'full' }: { variant?: 'full' | 'local' | 
           />
         ))}
 
-        <RSVP includeChabbat={true} />
+        <RSVP includeChabbat={!isSoireeOnly} />
       </main>
       <Footer />
       <ScrollHint />

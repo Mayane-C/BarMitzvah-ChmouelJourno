@@ -66,7 +66,10 @@ export function RSVP({ includeChabbat }: { includeChabbat: boolean }) {
       chabbatAdultes: includeChabbat ? n(data.chabbatAdultes) : 0,
       chabbatEnfants: includeChabbat ? n(data.chabbatEnfants) : 0,
       soireeAbsent,
-      chabbatAbsent: includeChabbat ? chabbatAbsent : false,
+      // Invitation soirée seule → Chabbat coché « pas présent »
+      // automatiquement (sinon la case reste vide et on ne peut plus
+      // distinguer une absence explicite d'une non-invitation).
+      chabbatAbsent: includeChabbat ? chabbatAbsent : true,
       message: data.message,
       version: includeChabbat ? 'chabbat' : 'soiree',
     });

@@ -14,10 +14,10 @@ export function Footer() {
       </div>
 
       <a
-        href="https://latouchedesigner.vercel.app"
+        href="https://wa.me/33652426663"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Site de La Touche Designer (nouvel onglet)"
+        aria-label="Contacter La Touche Designer sur WhatsApp (nouvel onglet)"
         className="group inline-flex flex-col items-center gap-2 mt-2 cursor-pointer"
       >
         <img
@@ -31,6 +31,9 @@ export function Footer() {
             <path d="M7 17 L17 7" />
             <path d="M8 7 H17 V16" />
           </svg>
+        </span>
+        <span className="text-sky-deep/70 group-hover:text-sky-deep text-[11px] tracking-[0.08em] tabular-nums transition-colors">
+          +33 6 52 42 66 63
         </span>
       </a>
       <p className="mt-2 text-ink-soft/55 text-[9px] uppercase tracking-[0.06em]">

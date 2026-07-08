@@ -88,7 +88,7 @@ export const content = {
         titre: 'La Soirée',
         icon: 'party',
         date: 'Dimanche 30 août 2026',
-        heure: '19h00',
+        heure: '19h30',
         lieu: 'Les Salons Haya Mouchka',
         adresse: '49 rue Petit, 75019 Paris',
         wazeUrl: '',

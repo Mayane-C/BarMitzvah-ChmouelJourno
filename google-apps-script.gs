@@ -243,7 +243,7 @@ function updateSummary(ss) {
     ['RÉPONSES', ''],
     ['Invitations complètes', nCompletes],
     ['Invitations soirée uniquement', nSoireeOnly],
-    ['Total familles', nCompletes + nSoireeOnly]
+    ['Total invitations', nCompletes + nSoireeOnly]
   ];
   sheet.getRange(1, 1, rows.length, 2).setValues(rows);
   sheet.getRange('A1:B1').merge().setFontSize(14).setFontWeight('bold').setFontColor(C_INK);

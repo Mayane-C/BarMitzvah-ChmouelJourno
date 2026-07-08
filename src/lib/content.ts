@@ -22,7 +22,7 @@ export const content = {
     // Grands-parents — deux colonnes (paternels à gauche, maternels à droite)
     grandsParents: {
       gauche: ['M. et Mme Journo Tsion'],
-      droite: ['Mme Smadja Myriam'],
+      droite: ['M. Éric Smadja z״l', 'Mme Smadja Myriam'],
     },
     // Parents
     famille: 'M. et Mme Journo Chalom',
@@ -33,7 +33,8 @@ export const content = {
     prenomSecond: '', // TODO : seconds prénoms si applicable
     nom: 'Journo',
     prenomHe: '', // TODO : nom hébraïque
-    pensee: '', // TODO : pensée éventuelle (laisser vide si non utilisée)
+    pensee:
+      'Une pensée particulière pour notre grand-père Éric Smadja z״l avec qui nous aurions aimé partager ce moment',
   },
 
   // Événements groupés par zone géographique
@@ -102,6 +103,7 @@ export const content = {
     logoCrown: '/images/logo-chmouel-crown.png',  // couronne seule (hero)
     wordmark: '/images/wordmark-chmouel.png',     // typo CHMOUEL seule (hero)
     logoLTD: '/images/ltd-logo.png',              // signature footer
+    colombe: '/images/colombe.png',               // colombe (pensée en mémoire)
   },
 
   // Vidéos d'arrière-plan, découpées en séquences d'images JPG pour pouvoir

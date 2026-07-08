@@ -291,6 +291,12 @@ export function Announcement() {
             dir="auto"
           >
             {a.pensee}
+            <img
+              src={content.visuels.colombe}
+              alt=""
+              aria-hidden="true"
+              className="inline-block align-[-0.15em] w-4 md:w-5 ml-1.5"
+            />
           </motion.p>
         )}
       </motion.div>

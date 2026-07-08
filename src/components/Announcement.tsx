@@ -291,11 +291,19 @@ export function Announcement() {
             dir="auto"
           >
             {a.pensee}
-            <img
-              src={content.visuels.colombe}
-              alt=""
+            <span
               aria-hidden="true"
-              className="inline-block align-[-0.15em] w-4 md:w-5 ml-1.5"
+              className="inline-block align-[-0.15em] w-4 md:w-5 h-4 md:h-5 ml-1.5 bg-sun"
+              style={{
+                maskImage: `url(${content.visuels.colombe})`,
+                maskSize: 'contain',
+                maskRepeat: 'no-repeat',
+                maskPosition: 'center',
+                WebkitMaskImage: `url(${content.visuels.colombe})`,
+                WebkitMaskSize: 'contain',
+                WebkitMaskRepeat: 'no-repeat',
+                WebkitMaskPosition: 'center',
+              }}
             />
           </motion.p>
         )}
